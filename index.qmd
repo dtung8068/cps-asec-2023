@@ -1,1 +1,9 @@
 # Introduction
+
+Health is undoubtedly a key dimension of our well-being. When we feel healthy, we tend to be more productive during work hours and enjoy our free time more. On the other hand, being sick is usually synonymous with feeling upset and without enough energy to pursue our goals. 
+
+Furthermore, it is plausible to believe that health status is not an isolated variable, but it is related with other dimensions such as race, age and economic status. Therefore, it is essential to understand how health relates to other metrics. The following questions then arise: are richer people healthier than poorer ones?, in a similar way, are employed people healthier than unemployed ones?, the level of education is positively correlated with the health status, i.e. are people with more education healthier? What is the relation with other dimensions such as race or sex? When disabled people are asked about their health status, what do they answer? Is the distribution of health status uniform across states or does it change? 
+
+With these questions in mind, on this project we delve into the health status of people living in the United States. We analyze the distribution of health status and deepen on how it relates with other social, cultural, and economic dimensions. We also study whether there are common patterns across regions in the United States. 
+
+Having a clear understanding of health across the country is not only important in terms of individual well-being, but also in terms of broader societal purposes. For instance, it makes sense to believe that a healthier society translates not only into more satisfied citizens, but also into a more productive workforce and, in turn, into a richer population. On this project, we analyze the health status of United States society and its relations with different dimensions. Finally, based on the results obtained, we outline recommendations regarding health as public policy.
