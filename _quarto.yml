@@ -6,11 +6,11 @@ execute:
   echo: true
 
 book:
-  title: "YOUR PROJECT TITLE"
+  title: "CPS ASEC 2023 Analysis"
   author:
-    - AUTHOR1 (UNI1)
-    - AUTHOR2 (UNI2)
-  repo-url: https://github.com/YOUR_GITHUB_ACCOUNT/REPO_NAME
+    - Darren Tung (dat2168)
+    - Nicolás Cogorno (nac2216)
+  repo-url: https://github.com/dtung8068/cps-asec-2023
   date: today
   page-footer:
     right: |
