@@ -40,3 +40,20 @@ DataExplorer::plot_missing(df) +
 ```
 We have used the plot_missing function from the 'DataExplorer' package. 
 
+The graph indicates the share of rows with missing values for each of the 14 variables. It follows from the graph that  there are no missing values in any of the dimensions. It is worth noting that the Census Bureau preprocesses the data and imputes missing values, before releasing the dataset. [(More information about CPS ASEC preprocessing)](https://www.census.gov/newsroom/blogs/research-matters/2019/09/cps-asec.html). 
+
+Alternatively, we can use the plot_missing function from the 'redav' package:
+
+```{r}
+# install.packages("remotes")
+# remotes::install_github("jtr13/redav")
+redav::plot_missing(df, percent=TRUE)
+```
+With this alternative graph, we can see again that there are no missing values on any dimension. Indeed, the only row pattern that exists in the dataset is the one that corresponds to 'no missing values', which is named 'complete cases'
+
+Finally, this characteristic of the dataset could also have been discovered through the following code:
+```{r}
+# Missing values
+colSums(is.na(df)) %>% 
+  sort (decreasing = TRUE)
+```
