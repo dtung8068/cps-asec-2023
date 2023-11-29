@@ -26,4 +26,17 @@ We will also use georeferencing data of each person's location to assess whether
 
 ## Missing value analysis
 
+Fortunately, there are no missing values for the subset of dimensions of the CPS-ASEC that we will work with. 
+
+Indeed, we can look at this through the following graph:
+
+```{r}
+# Missing values
+# Graph
+# install.packages("DataExplorer")
+library(DataExplorer)
+DataExplorer::plot_missing(df) + 
+    scale_y_continuous(limits = c(0, 10), breaks = seq(0, 10, by = 1))
+```
+We have used the plot_missing function from the 'DataExplorer' package. 
 
