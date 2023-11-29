@@ -24,6 +24,106 @@ Another research question is how the health of native-born or naturalized US cit
 
 We will also use georeferencing data of each person's location to assess whether there are differences in health across states and counties in the United States. In particular, we will utilize the variables 'GESTFIPS' and 'GTCO' that indicate respectively the state and county of each observation. Finally, for all the previous analyses to be correct, we will weigh each observation with its respective weight indicated in the variable 'A_FNLWGT'.
 
+## Initial preprocessing
+
+We first import and load the following packages:
+```{r}
+install.packages("cpsR")
+install.packages("usethis")
+install.packages("DataExplorer")
+install.packages("remotes")
+remotes::install_github("jtr13/redav") 
+
+library(cpsR)
+library(tidyverse)
+library(ggplot2)
+library(DataExplorer)
+library(ggplot2)
+```
+Then, we import the selected features from the 2023 CPS-ASEC dataset using the function 'get_asec' from the package 'cpsR':
+
+```{r}
+df <- get_asec(year = 2023, vars = c("PERIDNUM", "A_FNLWGT", "GESTFIPS", "GTCO", "HEA", "A_AGE", "A_SEX", "PRCITSHP","PRDTRACE", "PEMLR","A_HGA","PEARNVAL","DIS_HP","NOW_COV"), key="033d6fdb469d970444d91cda781be61fa0d46099", tibble = FALSE)
+```
+
+We rename each variable as follows:
+
+```{r}
+df <- df %>% 
+  rename(
+    ID = "peridnum",
+    Wt = "a_fnlwgt",
+    State = "gestfips",
+    Co = "gtco", # County
+    Health = "hea",
+    Age = "a_age",
+    Sex = "a_sex",
+    Citz = "prcitshp",
+    Race = "prdtrace",
+    Empt = "pemlr",
+    Edu = "a_hga",
+    Earn = "pearnval",
+    Pwd = "dis_hp",
+    Ins = "now_cov"
+    )
+```
+
+Since there are certain features whose categories are too detailed for our purposes, we make the following preprocessing:
+
+```{r}
+### Sex ###
+df$Sex <- factor(df$Sex, levels = c(1, 2), labels = c("Male", "Female"))
+
+### Citizenship ###
+df$Citz <- factor(df$Citz, levels = c(1, 2, 3, 4, 5), labels = c("Native", "Native", "Native", "Naturalized", "Not US Citizen"))
+# We group:
+#     categories 1 (Native, born in the US), 2 (Native, born in PR or US outlying are) and 3 (Native, born abroad of US parent(s)) into "Native". 
+table(df$Citz)
+
+### Employment ###
+df$Empt <- factor(df$Empt, levels = c(0, 1, 2, 3, 4, 5, 6, 7), labels = c("NIU","Employed", "Employed", "Unemployed", "Unemployed", "Retired", "Disabled", "Other"))
+# We group: 
+#     categories 1 (Employed - at work) and 2 (Employed - absent) into "Employed"
+#     categories 3 (Unemployed - on layoff) and 4 (Unemployed - looking) into "Unemployed". 
+table(df$Empt)
+
+### Education ###
+table(df$Edu)
+df$Edu <- ifelse(df$Edu >= 31 & df$Edu <= 38, 30, df$Edu)
+# We group categories 31 to 38 into 30 (than we'll label it as "High school Incomplete")
+df$Edu <- factor(df$Edu, levels = c(0, 30, 39, 40, 41, 42, 43, 44, 45, 46), labels = c("Children","High school Incomplete", "High School Complete", "College Incomplete", "Associate", "Associate", "Bachelor", "Master", "Professional Degree", "PHD"))
+# We group categories 41 and 42 into "Associate"
+table(df$Edu)
+
+### Race ###
+table(df$Race)
+df$Race <- ifelse(df$Race >= 6, 6, df$Race)
+df$Race <- factor(df$Race, levels = c(1, 2, 3, 4, 5, 6), labels = c("White","Black", "American Indian", "Asian", "Pacific Islander", "Mixed"))
+table(df$Race)
+
+### Disabled ###
+df$Pwd <- factor(df$Pwd, levels = c(0, 1, 2), labels = c("NIU", "Yes", "No"))
+table(df$Pwd)
+
+### Health Status ###
+df$Health <- factor(df$Health, levels = c(1, 2, 3, 4, 5), labels = c("Excellent", "Very good", "Good", "Fair", "Poor"))
+table(df$Health)
+
+### Insurance Coverage ###
+df$Ins <- factor(df$Ins, levels = c(1, 2), labels = c("Yes", "No"))
+```
+For instance, we have grouped the categories 1 (Employed - at work) and 2 (Employed - absent) into "Employed" on the feature that indicates the employment status. 
+
+To see the column types: 
+```{r}
+data.frame(sapply(df,class))
+```
+
+Finally, we update the theme of ggplot to center the titles by default:
+```{r}
+theme_update(plot.title = element_text(hjust = 0.5))
+```
+
 ## Missing value analysis
 
 Fortunately, there are no missing values for the subset of dimensions of the CPS-ASEC that we will work with. 
@@ -56,4 +156,3 @@ Although there are no missing values, there are some questions that -by construc
 ```{r}
 nrow(df[df$Age < 15, ]) == nrow(df[df$Pwd == "NIU", ])
 ```
-
