@@ -2,7 +2,7 @@
 
 To analyze health status of people living in the United States and its relations with other social, cultural and economic dimensions we use the Annual Social and Economic Supplement to the Current Population Survey (CPS-ASEC from now on). This data is collected annually -mainly during March- by the U.S. Census Bureau and includes information of more than 75,000 households. It is worth noting that the dataset contains information for every member of each of the participating households.
 
-The data is available on the [U.S. Census Bureau's official website](https://www.census.gov/data/datasets/time-series/demo/cps/cps-asec.html) in both SAS and CSV format. As it is documentated in the official [Data Dictionary](https://www2.census.gov/programs-surveys/cps/datasets/2023/march/asec2023_ddl_pub_full.pdf), the variables may refer to three different record types: Household, Family or Person. For this project, we work with a subset of the 'Person Type' variables. Furthermore, as we also want to use georeference data, we incorporate the two 'Household Type' variables that point the state and county of every observation. 
+The data is available on the [U.S. Census Bureau's official website](https://www.census.gov/data/datasets/time-series/demo/cps/cps-asec.html) in both SAS and CSV format. As it is documentated in the official [Data Dictionary](https://www2.census.gov/programs-surveys/cps/datasets/2023/march/asec2023_ddl_pub_full.pdf), the variables may refer to three different record types: Household, Family or Person. For this project, we work with a subset of the 'Person Type' variables. Furthermore, as we also want to use georeferencing data, we incorporate the two 'Household Type' variables that point the state and county of every observation. 
 
 There is an available package in R called 'cpsR' [see documentation here](https://cran.r-project.org/web/packages/cpsR/index.html) to import the data. Particularly, there is a function called 'get_asec' to load the data. However, to get the data, we first needed to request a key for the Census API through [this official website](https://api.census.gov/data/key_signup.html). We work with the most updated information so far: the 2023 CPS-ASEC dataset.  
 
@@ -25,4 +25,5 @@ Another research question is how the health of native-born or naturalized US cit
 We will also use georeferencing data of each person's location to assess whether there are differences in health across states and counties in the United States. In particular, we will utilize the variables 'GESTFIPS' and 'GTCO' that indicate respectively the state and county of each observation. Finally, for all the previous analyses to be correct, we will weigh each observation with its respective weight indicated in the variable 'A_FNLWGT'.
 
 ## Missing value analysis
+
 
