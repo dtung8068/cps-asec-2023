@@ -10,7 +10,7 @@ The 2023 CPS-ASEC dataset contains information of 146,133 individuals. Each row 
 
 There are in total 829 'Person Type' variables in the dataset that cover a huge number of characteristics. For this project, since we are interested in health status and how it relates to specific social, cultural, and economic dimensions we have selected a subset of 10 'Person Type' variables -additionally to the identifier and weight columns-. 
 
-Our main variable is 'HEA' that refers to the health status of the person. This is a categorical variable that takes five possible values: 1 (that accounts for 'Excellent'), 2 ('Very good'), 3 ('Good'), 4 ('Fair') or 5 ('Poor'). We have also chosen two additional variables related to health: 'DIS_HP' and 'NOW_COV': the former indicates if the person has a health problem or a disability and the latter indicates if the interviewed is currently covered by health insurance coverage. It is worth noting that 'dis_hp' is only available for persons aged at least 15. In addition to these 3 variables related to health, we will also work with 7 other dimensions to better understand how health relates with other metrics. These additional variables are 'A_AGE' (that refers to the age of the person), 'A_SEX' (sex), 'PRDTRACE' (race), 'PEMLR' (employment status), 'A_HGA' (educational attainment), 'PRCITSHP' (citizenship) and 'PEARNVAL' (earnings). Finally, as we have mentioned, we include two 'Household Type' variables: 'GESTFIPS' and 'GTCO' that refer respectively to the state and county in which each person is located. Regarding this point, one issue with the data is that it only covers a subset of about 1300 of the 3100 counties in the United States.
+Our main variable is 'HEA' that refers to the health status of the person. This is a categorical variable that takes five possible values: 1 (that accounts for 'Excellent'), 2 ('Very good'), 3 ('Good'), 4 ('Fair') or 5 ('Poor'). We have also chosen two additional variables related to health: 'DIS_HP' and 'NOW_COV': the former indicates if the person has a health problem or a disability that prevents them from working and the latter indicates if the interviewed is currently covered by health insurance coverage. It is worth noting that 'dis_hp' is only available for persons aged at least 15. In addition to these 3 variables related to health, we will also work with 7 other dimensions to better understand how health relates with other metrics. These additional variables are 'A_AGE' (that refers to the age of the person), 'A_SEX' (sex), 'PRDTRACE' (race), 'PEMLR' (employment status), 'A_HGA' (educational attainment), 'PRCITSHP' (citizenship) and 'PEARNVAL' (earnings). Finally, as we have mentioned, we include two 'Household Type' variables: 'GESTFIPS' and 'GTCO' that refer respectively to the state and county in which each person is located. Regarding this point, one issue with the data is that it only covers a subset of about 1300 of the 3100 counties in the United States.
 
 ## Description
 
@@ -31,10 +31,6 @@ Fortunately, there are no missing values for the subset of dimensions of the CPS
 Indeed, we can look at this through the following graph:
 
 ```{r}
-# Missing values
-# Graph
-# install.packages("DataExplorer")
-library(DataExplorer)
 DataExplorer::plot_missing(df) + 
     scale_y_continuous(limits = c(0, 10), breaks = seq(0, 10, by = 1))
 ```
@@ -45,15 +41,19 @@ The graph indicates the share of rows with missing values for each of the 14 var
 Alternatively, we can use the plot_missing function from the 'redav' package:
 
 ```{r}
-# install.packages("remotes")
-# remotes::install_github("jtr13/redav")
 redav::plot_missing(df, percent=TRUE)
 ```
 With this alternative graph, we can see again that there are no missing values on any dimension. Indeed, the only row pattern that exists in the dataset is the one that corresponds to 'no missing values', which is named 'complete cases'
 
-Finally, this characteristic of the dataset could also have been discovered through the following code:
+This characteristic of the dataset could also have been discovered through the following code:
 ```{r}
-# Missing values
 colSums(is.na(df)) %>% 
   sort (decreasing = TRUE)
 ```
+
+Although there are no missing values, there are some questions that -by construction- are not asked to certain groups of people. In fact, as it can be checked on the official [Data Dictionary](https://www2.census.gov/programs-surveys/cps/datasets/2023/march/asec2023_ddl_pub_full.pdf), the dimensions 'PEARNVAL' and 'DIS_HP' are only available for people aged at least 15. It makes sense because 'PEARNVAL' refers to the earnings derived from wage or salary, or for self-employment income and 'DIS_HP' indicates whether or not the respondent has a disability that prevents them from working. Indeed, it can be checked that, for instance, the number of people with 'DIS_HP' == "NIU" that stands for "Not in Universe" equals the number of respondents up to 14 years old. 
+
+```{r}
+nrow(df[df$Age < 15, ]) == nrow(df[df$Pwd == "NIU", ])
+```
+
