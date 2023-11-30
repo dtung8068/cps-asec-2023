@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -142,8 +176,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#description" id="toc-description" class="nav-link active" data-scroll-target="#description"><span class="header-section-number">2.1</span> Description</a></li>
-  <li><a href="#missing-value-analysis" id="toc-missing-value-analysis" class="nav-link" data-scroll-target="#missing-value-analysis"><span class="header-section-number">2.2</span> Missing value analysis</a></li>
+  <li><a href="#technical-description" id="toc-technical-description" class="nav-link active" data-scroll-target="#technical-description"><span class="header-section-number">2.1</span> Technical Description</a></li>
+  <li><a href="#research-plan" id="toc-research-plan" class="nav-link" data-scroll-target="#research-plan"><span class="header-section-number">2.2</span> Research Plan</a></li>
+  <li><a href="#initial-preprocessing" id="toc-initial-preprocessing" class="nav-link" data-scroll-target="#initial-preprocessing"><span class="header-section-number">2.3</span> Initial preprocessing</a></li>
+  <li><a href="#missing-value-analysis" id="toc-missing-value-analysis" class="nav-link" data-scroll-target="#missing-value-analysis"><span class="header-section-number">2.4</span> Missing value analysis</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/dtung8068/cps-asec-2023/edit/main/data.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/dtung8068/cps-asec-2023/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -167,11 +203,241 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<section id="description" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="description"><span class="header-section-number">2.1</span> Description</h2>
+<section id="technical-description" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="technical-description"><span class="header-section-number">2.1</span> Technical Description</h2>
+<p>To analyze health status of people living in the United States and its relations with other social, cultural and economic dimensions we use the Annual Social and Economic Supplement to the Current Population Survey (CPS-ASEC from now on). This data is collected annually -mainly during March- by the U.S. Census Bureau and includes information of more than 75,000 households. It is worth noting that the dataset contains information for every member of each of the participating households.</p>
+<p>The data is available on the <a href="https://www.census.gov/data/datasets/time-series/demo/cps/cps-asec.html">U.S. Census Bureau’s official website</a> in both SAS and CSV format. As it is documentated in the official <a href="https://www2.census.gov/programs-surveys/cps/datasets/2023/march/asec2023_ddl_pub_full.pdf">Data Dictionary</a>, the variables may refer to three different record types: Household, Family or Person. For this project, we work with a subset of the ‘Person Type’ variables. Furthermore, as we also want to use georeferencing data, we incorporate the two ‘Household Type’ variables that point the state and county of every observation.</p>
+<p>There is an available package in R called ‘cpsR’ <a href="https://cran.r-project.org/web/packages/cpsR/index.html">see documentation here</a> to import the data. Particularly, there is a function called ‘get_asec’ to load the data. However, to get the data, we first needed to request a key for the Census API through <a href="https://api.census.gov/data/key_signup.html">this official website</a>. We’ll work with the most updated information so far: the 2023 CPS-ASEC dataset.</p>
+<p>The 2023 CPS-ASEC dataset contains information of 146,133 individuals. Each row refers to a unique individual, identified with the variable ‘PERIDNUM’ (22-digit Unique Person identifier). Since the database is a sample, and logically does not cover the entire population, there is a variable ‘A_FNLWGT’ that contains the weight associated with each observation. It is important to take this variable into account so that the statistics and graphs are a fair representation of the overall US population.</p>
+<p>There are in total 829 ‘Person Type’ variables in the dataset that cover a huge number of characteristics. For this project, since we are interested in health status and how it relates to specific social, cultural, and economic dimensions we have selected a subset of 10 ‘Person Type’ variables -additionally to the identifier and weight columns-.</p>
+<p>Our main variable is ‘HEA’ that refers to the health status of the person. This is a categorical variable that takes five possible values: 1 (that accounts for ‘Excellent’), 2 (‘Very good’), 3 (‘Good’), 4 (‘Fair’) or 5 (‘Poor’). We have also chosen two additional variables related to health: ‘DIS_HP’ and ‘NOW_COV’: the former indicates if the person has a health problem or a disability that prevents them from working and the latter indicates if the interviewed is currently covered by health insurance coverage. It is worth noting that ‘dis_hp’ is only available for persons aged at least 15. In addition to these 3 variables related to health, we will also work with 7 other dimensions to better understand how health relates with other metrics. These additional variables are ‘A_AGE’ (that refers to the age of the person), ‘A_SEX’ (sex), ‘PRDTRACE’ (race), ‘PEMLR’ (employment status), ‘A_HGA’ (educational attainment), ‘PRCITSHP’ (citizenship) and ‘PEARNVAL’ (earnings). Finally, as we have mentioned, we include two ‘Household Type’ variables: ‘GESTFIPS’ and ‘GTCO’ that refer respectively to the state and county in which each person is located. Regarding this point, one issue with the data is that it only covers a subset of about 1300 of the 3100 counties in the United States.</p>
 </section>
-<section id="missing-value-analysis" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="missing-value-analysis"><span class="header-section-number">2.2</span> Missing value analysis</h2>
+<section id="research-plan" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="research-plan"><span class="header-section-number">2.2</span> Research Plan</h2>
+<p>The main focus of the project is to understand the current health status of the US population. To assess it, we will analyze the variable ‘HEA’ from the Annual Social and Economic Supplement to the Current Population Survey that indicates the perception of the self state of health of each interviewed individual. It is worth noting that it is not an objective metric, but rather a subjective one. We will be considering this variable as a proxy of their actual state of health.</p>
+<p>In addition, we are interested not only in health status, but also in its relation to other dimensions. For instance, as we pointed out in the Introduction, we wonder whether richer people are healthier -or not- than poorer ones. To understand this relationship, we will study how variables ‘HEA’ (health status) and ‘PEARNVAL’ (earnings) interact with each other. Although we will not analyze cause-effect relationships, we will study if these two dimensions are positively or negatively correlated - or maybe they are not related at all-. From an economic point of view, we should expect a positive relationship since, for example, higher earnings translate into a greater purchasing power to purchase better insurance coverage. However, there may be other factors that mediate this relation. Besides, as ‘HEA’ is a subjective measure, it could be the case that wealthier people compare their health status to the one of other wealthy people (rather than to the average population) and therefore we may not find a positive relation between economic status and health. To better understand this connection, we will also use the variables ‘DIS_HP’ and ‘NOW_COV’ that measure, respectively, if the person has a disability which prevents work, and if the person has currently health insurance coverage.</p>
+<p>In a similar way, we are concerning about how employment status relates with health. It is reasonable to believe that employed people enjoy better general health. Indeed, we expect them to have more money and therefore spend more money on health treatments. Nevertheless, it could also be possible that employed people felt more stressed during the day of the interview, and their responses could underestimate their actual health status. We will deepen on this relationship analyzing the variables ‘HEA’ (health status) and ‘PEMLR’ (employment status).</p>
+<p>Another research question is how the health of native-born or naturalized US citizens relates to that of non-US citizens that live in the US, and how this relation changes with age. To answer this question we will analyze the joint relationship between the variables ‘HEA’ (health status), ‘PRCITSHP’ (citizenship) and ‘A_AGE’ (age). This relationship can take different directions. For instance, it could be the case that nowadays there is no difference in health for young people between US citizens and non-US citizens. However, it is possible that some decades ago, there was a significant difference in health in terms of citizenship status -perhaps due to some health-related legislation- that persists for people who are older today. To answer this type of questions we need to analyze the three different dimensions at the same time -for example, using an adequate mosaic plot-.</p>
+<p>We will also use georeferencing data of each person’s location to assess whether there are differences in health across states and counties in the United States. In particular, we will utilize the variables ‘GESTFIPS’ and ‘GTCO’ that indicate respectively the state and county of each observation. Finally, for all the previous analyses to be correct, we will weigh each observation with its respective weight indicated in the variable ‘A_FNLWGT’.</p>
+</section>
+<section id="initial-preprocessing" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="initial-preprocessing"><span class="header-section-number">2.3</span> Initial preprocessing</h2>
+<p>We first import and load the following packages:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("cpsR")</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("usethis")</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("DataExplorer")</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#install.packages("remotes")</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#remotes::install_github("jtr13/redav") </span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cpsR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'cpsR' was built under R version 4.3.2</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.3     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.3     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DataExplorer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'DataExplorer' was built under R version 4.3.2</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Then, we import the selected features from the 2023 CPS-ASEC dataset using the function ‘get_asec’ from the package ‘cpsR’:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">get_asec</span>(<span class="at">year =</span> <span class="dv">2023</span>, <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"PERIDNUM"</span>, <span class="st">"A_FNLWGT"</span>, <span class="st">"GESTFIPS"</span>, <span class="st">"GTCO"</span>, <span class="st">"HEA"</span>, <span class="st">"A_AGE"</span>, <span class="st">"A_SEX"</span>, <span class="st">"PRCITSHP"</span>,<span class="st">"PRDTRACE"</span>, <span class="st">"PEMLR"</span>,<span class="st">"A_HGA"</span>,<span class="st">"PEARNVAL"</span>,<span class="st">"DIS_HP"</span>,<span class="st">"NOW_COV"</span>), <span class="at">key=</span><span class="st">"033d6fdb469d970444d91cda781be61fa0d46099"</span>, <span class="at">tibble =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Getting CPS ASEC microdata for 2023</code></pre>
+</div>
+</div>
+<p>We rename each variable as follows:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ID =</span> <span class="st">"peridnum"</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Wt =</span> <span class="st">"a_fnlwgt"</span>,</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">State =</span> <span class="st">"gestfips"</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Co =</span> <span class="st">"gtco"</span>, <span class="co"># County</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Health =</span> <span class="st">"hea"</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Age =</span> <span class="st">"a_age"</span>,</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sex =</span> <span class="st">"a_sex"</span>,</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">Citz =</span> <span class="st">"prcitshp"</span>,</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">Race =</span> <span class="st">"prdtrace"</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">Empt =</span> <span class="st">"pemlr"</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">Edu =</span> <span class="st">"a_hga"</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">Earn =</span> <span class="st">"pearnval"</span>,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">Pwd =</span> <span class="st">"dis_hp"</span>,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ins =</span> <span class="st">"now_cov"</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Since there are certain features whose categories are too detailed for our purposes, we make the following preprocessing:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Sex </span><span class="al">###</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Sex <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Sex, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="do">### Citizenship </span><span class="al">###</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Citz <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Citz, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Native"</span>, <span class="st">"Native"</span>, <span class="st">"Native"</span>, <span class="st">"Naturalized"</span>, <span class="st">"Not US Citizen"</span>))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co"># We group:</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     categories 1 (Native, born in the US), 2 (Native, born in PR or US outlying are) and 3 (Native, born abroad of US parent(s)) into "Native". </span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Citz)</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="do">### Employment </span><span class="al">###</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Empt <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Empt, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"NIU"</span>,<span class="st">"Employed"</span>, <span class="st">"Employed"</span>, <span class="st">"Unemployed"</span>, <span class="st">"Unemployed"</span>, <span class="st">"Retired"</span>, <span class="st">"Disabled"</span>, <span class="st">"Other"</span>))</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co"># We group: </span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     categories 1 (Employed - at work) and 2 (Employed - absent) into "Employed"</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="co">#     categories 3 (Unemployed - on layoff) and 4 (Unemployed - looking) into "Unemployed". </span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Empt)</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="do">### Education </span><span class="al">###</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Edu)</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Edu <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>Edu <span class="sc">&gt;=</span> <span class="dv">31</span> <span class="sc">&amp;</span> df<span class="sc">$</span>Edu <span class="sc">&lt;=</span> <span class="dv">38</span>, <span class="dv">30</span>, df<span class="sc">$</span>Edu)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="co"># We group categories 31 to 38 into 30 (than we'll label it as "High school Incomplete")</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Edu <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Edu, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">39</span>, <span class="dv">40</span>, <span class="dv">41</span>, <span class="dv">42</span>, <span class="dv">43</span>, <span class="dv">44</span>, <span class="dv">45</span>, <span class="dv">46</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Children"</span>,<span class="st">"High school Incomplete"</span>, <span class="st">"High School Complete"</span>, <span class="st">"College Incomplete"</span>, <span class="st">"Associate"</span>, <span class="st">"Associate"</span>, <span class="st">"Bachelor"</span>, <span class="st">"Master"</span>, <span class="st">"Professional Degree"</span>, <span class="st">"PHD"</span>))</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="co"># We group categories 41 and 42 into "Associate"</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Edu)</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="do">### Race </span><span class="al">###</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Race)</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Race <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>Race <span class="sc">&gt;=</span> <span class="dv">6</span>, <span class="dv">6</span>, df<span class="sc">$</span>Race)</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Race <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Race, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"White"</span>,<span class="st">"Black"</span>, <span class="st">"American Indian"</span>, <span class="st">"Asian"</span>, <span class="st">"Pacific Islander"</span>, <span class="st">"Mixed"</span>))</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Race)</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="do">### Disabled </span><span class="al">###</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Pwd <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Pwd, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"NIU"</span>, <span class="st">"Yes"</span>, <span class="st">"No"</span>))</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Pwd)</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="do">### Health Status </span><span class="al">###</span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Health <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Health, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Excellent"</span>, <span class="st">"Very good"</span>, <span class="st">"Good"</span>, <span class="st">"Fair"</span>, <span class="st">"Poor"</span>))</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Health)</span></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="do">### Insurance Coverage </span><span class="al">###</span></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Ins <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Ins, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Yes"</span>, <span class="st">"No"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>For instance, we have grouped the categories 1 (Employed - at work) and 2 (Employed - absent) into “Employed” on the feature that indicates the employment status.</p>
+<p>To see the column types:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="fu">sapply</span>(df,class))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       sapply.df..class.
+ID               numeric
+Wt               numeric
+State            integer
+Co               integer
+Health            factor
+Age              integer
+Sex               factor
+Citz              factor
+Race              factor
+Empt              factor
+Edu               factor
+Earn             integer
+Pwd               factor
+Ins               factor</code></pre>
+</div>
+</div>
+<p>Finally, we update the theme of ggplot to center the titles by default:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_update</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="missing-value-analysis" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="missing-value-analysis"><span class="header-section-number">2.4</span> Missing value analysis</h2>
+<p>Fortunately, there are no missing values for the subset of dimensions of the CPS-ASEC that we will work with.</p>
+<p>Indeed, we can look at this through the following graph:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>DataExplorer<span class="sc">::</span><span class="fu">plot_missing</span>(df) <span class="sc">+</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>), <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="at">by =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-7-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We have used the plot_missing function from the ‘DataExplorer’ package.</p>
+<p>The graph indicates the share of rows with missing values for each of the 14 variables. It follows from the graph that there are no missing values in any of the dimensions. It is worth noting that the Census Bureau preprocesses the data and imputes missing values, before releasing the dataset. <a href="https://www.census.gov/newsroom/blogs/research-matters/2019/09/cps-asec.html">(More information about CPS ASEC preprocessing)</a>.</p>
+<p>Alternatively, we can use the plot_missing function from the ‘redav’ package:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>redav<span class="sc">::</span><span class="fu">plot_missing</span>(df, <span class="at">percent=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for y is already present.
+Adding another scale for y, which will replace the existing scale.
+Scale for y is already present.
+Adding another scale for y, which will replace the existing scale.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>With this alternative graph, we can see again that there are no missing values on any dimension. Indeed, the only row pattern that exists in the dataset is the one that corresponds to ‘no missing values’, which is named ‘complete cases’</p>
+<p>This characteristic of the dataset could also have been discovered through the following code:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(df)) <span class="sc">%&gt;%</span> </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sort</span> (<span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>    ID     Wt  State     Co Health    Age    Sex   Citz   Race   Empt    Edu 
+     0      0      0      0      0      0      0      0      0      0      0 
+  Earn    Pwd    Ins 
+     0      0      0 </code></pre>
+</div>
+</div>
+<p>Although there are no missing values, there are some questions that -by construction- are not asked to certain groups of people. In fact, as it can be checked on the official <a href="https://www2.census.gov/programs-surveys/cps/datasets/2023/march/asec2023_ddl_pub_full.pdf">Data Dictionary</a>, the dimensions ‘PEARNVAL’ and ‘DIS_HP’ are only available for people aged at least 15. It makes sense because ‘PEARNVAL’ refers to the earnings derived from wage or salary, or for self-employment income and ‘DIS_HP’ indicates whether or not the respondent has a disability that prevents them from working. Indeed, it can be checked that, for instance, the number of people with ‘DIS_HP’ == “NIU” that stands for “Not in Universe” equals the number of respondents up to 14 years old.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df[df<span class="sc">$</span>Age <span class="sc">&lt;</span> <span class="dv">15</span>, ]) <span class="sc">==</span> <span class="fu">nrow</span>(df[df<span class="sc">$</span>Pwd <span class="sc">==</span> <span class="st">"NIU"</span>, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
 
 
 </section>

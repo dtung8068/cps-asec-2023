@@ -1,5 +1,7 @@
 # Data
 
+## Technical Description
+
 To analyze health status of people living in the United States and its relations with other social, cultural and economic dimensions we use the Annual Social and Economic Supplement to the Current Population Survey (CPS-ASEC from now on). This data is collected annually -mainly during March- by the U.S. Census Bureau and includes information of more than 75,000 households. It is worth noting that the dataset contains information for every member of each of the participating households.
 
 The data is available on the [U.S. Census Bureau's official website](https://www.census.gov/data/datasets/time-series/demo/cps/cps-asec.html) in both SAS and CSV format. As it is documentated in the official [Data Dictionary](https://www2.census.gov/programs-surveys/cps/datasets/2023/march/asec2023_ddl_pub_full.pdf), the variables may refer to three different record types: Household, Family or Person. For this project, we work with a subset of the 'Person Type' variables. Furthermore, as we also want to use georeferencing data, we incorporate the two 'Household Type' variables that point the state and county of every observation. 
@@ -12,7 +14,7 @@ There are in total 829 'Person Type' variables in the dataset that cover a huge 
 
 Our main variable is 'HEA' that refers to the health status of the person. This is a categorical variable that takes five possible values: 1 (that accounts for 'Excellent'), 2 ('Very good'), 3 ('Good'), 4 ('Fair') or 5 ('Poor'). We have also chosen two additional variables related to health: 'DIS_HP' and 'NOW_COV': the former indicates if the person has a health problem or a disability that prevents them from working and the latter indicates if the interviewed is currently covered by health insurance coverage. It is worth noting that 'dis_hp' is only available for persons aged at least 15. In addition to these 3 variables related to health, we will also work with 7 other dimensions to better understand how health relates with other metrics. These additional variables are 'A_AGE' (that refers to the age of the person), 'A_SEX' (sex), 'PRDTRACE' (race), 'PEMLR' (employment status), 'A_HGA' (educational attainment), 'PRCITSHP' (citizenship) and 'PEARNVAL' (earnings). Finally, as we have mentioned, we include two 'Household Type' variables: 'GESTFIPS' and 'GTCO' that refer respectively to the state and county in which each person is located. Regarding this point, one issue with the data is that it only covers a subset of about 1300 of the 3100 counties in the United States.
 
-## Description
+## Research Plan
 
 The main focus of the project is to understand the current health status of the US population. To assess it, we will analyze the variable 'HEA' from the Annual Social and Economic Supplement to the Current Population Survey that indicates the  perception of the self state of health of each interviewed individual. It is worth noting that it is not an objective metric, but rather a subjective one. We will be considering this variable as a proxy of their actual state of health.
 
@@ -28,11 +30,11 @@ We will also use georeferencing data of each person's location to assess whether
 
 We first import and load the following packages:
 ```{r}
-install.packages("cpsR")
-install.packages("usethis")
-install.packages("DataExplorer")
-install.packages("remotes")
-remotes::install_github("jtr13/redav") 
+#install.packages("cpsR")
+#install.packages("usethis")
+#install.packages("DataExplorer")
+#install.packages("remotes")
+#remotes::install_github("jtr13/redav") 
 
 library(cpsR)
 library(tidyverse)
