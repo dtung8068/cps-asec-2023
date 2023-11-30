@@ -78,36 +78,36 @@ df$Sex <- factor(df$Sex, levels = c(1, 2), labels = c("Male", "Female"))
 df$Citz <- factor(df$Citz, levels = c(1, 2, 3, 4, 5), labels = c("Native", "Native", "Native", "Naturalized", "Not US Citizen"))
 # We group:
 #     categories 1 (Native, born in the US), 2 (Native, born in PR or US outlying are) and 3 (Native, born abroad of US parent(s)) into "Native". 
-table(df$Citz)
+#table(df$Citz)
 
 ### Employment ###
 df$Empt <- factor(df$Empt, levels = c(0, 1, 2, 3, 4, 5, 6, 7), labels = c("NIU","Employed", "Employed", "Unemployed", "Unemployed", "Retired", "Disabled", "Other"))
 # We group: 
 #     categories 1 (Employed - at work) and 2 (Employed - absent) into "Employed"
 #     categories 3 (Unemployed - on layoff) and 4 (Unemployed - looking) into "Unemployed". 
-table(df$Empt)
+#table(df$Empt)
 
 ### Education ###
-table(df$Edu)
+#table(df$Edu)
 df$Edu <- ifelse(df$Edu >= 31 & df$Edu <= 38, 30, df$Edu)
 # We group categories 31 to 38 into 30 (than we'll label it as "High school Incomplete")
 df$Edu <- factor(df$Edu, levels = c(0, 30, 39, 40, 41, 42, 43, 44, 45, 46), labels = c("Children","High school Incomplete", "High School Complete", "College Incomplete", "Associate", "Associate", "Bachelor", "Master", "Professional Degree", "PHD"))
 # We group categories 41 and 42 into "Associate"
-table(df$Edu)
+#table(df$Edu)
 
 ### Race ###
-table(df$Race)
+#table(df$Race)
 df$Race <- ifelse(df$Race >= 6, 6, df$Race)
 df$Race <- factor(df$Race, levels = c(1, 2, 3, 4, 5, 6), labels = c("White","Black", "American Indian", "Asian", "Pacific Islander", "Mixed"))
-table(df$Race)
+#table(df$Race)
 
 ### Disabled ###
 df$Pwd <- factor(df$Pwd, levels = c(0, 1, 2), labels = c("NIU", "Yes", "No"))
-table(df$Pwd)
+#table(df$Pwd)
 
 ### Health Status ###
 df$Health <- factor(df$Health, levels = c(1, 2, 3, 4, 5), labels = c("Excellent", "Very good", "Good", "Fair", "Poor"))
-table(df$Health)
+#table(df$Health)
 
 ### Insurance Coverage ###
 df$Ins <- factor(df$Ins, levels = c(1, 2), labels = c("Yes", "No"))
