@@ -41,7 +41,6 @@ library(cpsR)
 library(tidyverse)
 library(ggplot2)
 library(DataExplorer)
-library(ggplot2)
 library(data.table)
 ```
 Then, we import the selected features from the 2023 CPS-ASEC dataset using the function 'get_asec' from the package 'cpsR':
