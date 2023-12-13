@@ -46,7 +46,7 @@ library(data.table)
 Then, we import the selected features from the 2023 CPS-ASEC dataset using the function 'get_asec' from the package 'cpsR':
 
 ```{r}
-df <- get_asec(year = 2023, vars = c("PERIDNUM", "A_FNLWGT", "GESTFIPS", "GTCO", "HEA", "A_AGE", "A_SEX", "PRCITSHP","PRDTRACE", "PEMLR","A_HGA","PEARNVAL","DIS_HP","NOW_COV"), key="033d6fdb469d970444d91cda781be61fa0d46099", tibble = FALSE)
+df <- get_asec(year = 2023, vars = c("PERIDNUM", "A_FNLWGT", "GESTFIPS", "GTCO", "HEA", "A_AGE", "A_SEX", "PRCITSHP","PRDTRACE", "PEMLR","A_HGA","PEARNVAL","DIS_HP","NOW_COV", "MOOP"), key="033d6fdb469d970444d91cda781be61fa0d46099", tibble = FALSE)
 ```
 
 We rename each variable as follows:
@@ -67,7 +67,8 @@ df <- df %>%
     Edu = "a_hga",
     Earn = "pearnval",
     Pwd = "dis_hp",
-    Ins = "now_cov"
+    Ins = "now_cov",
+    MExp = "moop"
     )
 ```
 
@@ -94,7 +95,7 @@ df$Empt <- factor(df$Empt, levels = c(0, 1, 2, 3, 4, 5, 6, 7), labels = c("NIU",
 #table(df$Edu)
 df$Edu <- ifelse(df$Edu >= 31 & df$Edu <= 38, 30, df$Edu)
 # We group categories 31 to 38 into 30 (than we'll label it as "High school Incomplete")
-df$Edu <- factor(df$Edu, levels = c(0, 30, 39, 40, 41, 42, 43, 44, 45, 46), labels = c("Children","High school Incomplete", "High School Complete", "College Incomplete", "Associate", "Associate", "Bachelor", "Master", "Professional Degree", "PHD"))
+df$Edu <- factor(df$Edu, levels = c(0, 30, 39, 40, 41, 42, 43, 44, 45, 46), labels = c("Children","H.S. Inc.", "H.S. Compl.", "College Inc.", "Associate", "Associate", "Bachelor", "Master", "Professional Degree", "PHD"))
 # We group categories 41 and 42 into "Associate"
 #table(df$Edu)
 
@@ -300,31 +301,92 @@ ggplot(df, mapping=aes(x = Earn, y = fct_rev(Health)), weight = Wt/1e6) +
 
 The previous graph is quite interesting. First, it shows that the distribution of earnings is right-skewed for every category of health status. In addition, it shows that there seems to be a positive correlation between earnings and health. Indeed, looking at the boxplots, it follows that the both the first quartile (Q1), the median and the third quartile (Q3) of earnings increases with health status. Indeed, for instance the median of people that have an "excellent" -perceived- state of health is higher than the mean of those that have a "very good" state of health, which is in turn higher than the median corresponding to people that have a "good" state of health and so on. In other words, wealthier people enjoys a better state of health than poorer people.
 
-## How does earnings associate with health?
+## Are more educated people healthier?
 
+In this section we study whether or not more educated people are healthier. In particular, we analyze the different shares of educational attainment for each level of health status.
+
+In the first part we split the population (aged 18 or more) by citizenship, and in the second part by race. 
+
+### Analysis by Citizenship
+
+The following graph shows the shares of the population with different educational attainment for the each level of health status, by citizenship.
+```{r}
+df <- df %>%
+  mutate(Edu_Grouped = case_when(
+    Edu %in% c("College Inc.", "Associate") ~ "College Inc/Assoc.",
+    Edu %in% c("Bachelor", "Master", "Professional Degree", "PHD") ~ "Adv. Edu",
+    TRUE ~ Edu
+  ))
+
+df_3 <- filter(df, Age>=18) %>%
+  group_by(Citz, Health, Edu_Grouped) %>%
+  dplyr::summarize(Freq = sum(Wt))
+
+df_3 <- df_3 %>%
+  group_by(Citz, Health) %>%
+  mutate(Total = sum(Freq)) %>%
+  ungroup()
+
+ggplot(df_3, aes(x = Edu_Grouped, y = Health)) +
+  geom_tile(aes(fill = (Freq/Total)), color = "white") +
+  coord_fixed() + 
+  scale_fill_gradient2(low = "black", mid = "white",
+                        high = "green", midpoint = .2, name = "Share") +
+  facet_wrap(~Citz) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0)) +
+  labs(x = "Educational Attainment", caption = "Source: own elaboration for EDAV Final Project based on CPS-ASEC 2023.\n Note: 'Adv. Edu' stands for Advanced Education and includes Bachelor degree or higher.") + 
+  ggtitle("Share of Educational Attainment by Health Status and Citizenship in the U.S.")
+```
+
+Let us analyze first the graph corresponding to Native U.S. citizens. 
+
+We see that for those people who enjoy an excellent or very good state of health, the square corresponding to the 'Adv edu' (which stands for 'Advanced Education', i.e., bachelor degree or higher) is filled in green color. This implies that it is quite probable for a person who enjoys a really good health status to have an advanced education degree. On the contrary, we can see that for these groups of people the squares associated with 'H.S. Inc' (High School Incomplete) are dark grey. This means that it is quite unlikely that the healthiest people have not completed at least high school. 
+
+On the other hand, if we analyze people who suffer a weak state of health (i.e., a poor or fair one) we see that the squares corresponding to advanced education are 'not longer' green, instead they are grey and white. This shows that for people with weak health it is quite unlikely to have an advanced level of education. On the contrary, as it can be seen on the graph, it is quite probable to 'only' have reached a high school degree. 
+
+This positive correlation between health and educational attainment can be also understood in a different way. For the columns corresponding to higher levels of education (i.e., advanced education), the colors range from darker grey colors at the top (poor health) to green colors at the bottom (excellent health), whereas something opposite occurs for more basic levels of education.
+
+Something similar happens to the other citizenship categories such as "Naturalized" or "Not U.S. Citizen". It is particularly interesting to note that for those non U.S. citizens that suffer a weak state of health (i.e., poor or fair) it is quite likely to have a poor level of education since the corresponding squares are green. 
+
+### Analysis by Race
 
 ```{r}
-# install.packages("weights")
-library(weights)
+df_4 <- filter(df, Age>=18 & (Race == "White" | Race == "Black" | Race == "Asian")) %>%
+  group_by(Race, Health, Edu_Grouped) %>%
+  dplyr::summarize(Freq = sum(Wt))
 
-df_3 <- df %>%
-  group_by(Citz, Health, Edu) %>%
-  mutate(Subtotal = sum(Wt)) %>%
-  ungroup() %>%
-  group_by(Citz, Health) %>%
-  mutate(Total = sum(Wt)) %>%
+df_4 <- df_4 %>%
+  group_by(Race, Health) %>%
+  mutate(Total = sum(Freq)) %>%
   ungroup()
 
-df_3 <- df %>%
-  group_by(Citz, Health, Edu) %>%
-  mutate(Total = sum(Wt)) %>%
-  ungroup()
-
-#ggplot(df_3, aes(x = Father, y = Son)) +
- # geom_tile(aes(fill = (Freq/Total)), color = "white") +
-  #coord_fixed() + 
-  #scale_fill_gradient2(low = "black", mid = "white",
-   #                     high = "red", midpoint = .2) +
-  #facet_wrap(~Country) + theme_heat
-
+ggplot(df_4, aes(x = Edu_Grouped, y = Health)) +
+  geom_tile(aes(fill = (Freq/Total)), color = "white") +
+  coord_fixed() + 
+  scale_fill_gradient2(low = "black", mid = "white",
+                        high = "green", midpoint = .2, name = "Share") +
+  facet_wrap(~Race) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0)) +
+  labs(x = "Educational Attainment", caption = "Source: own elaboration for EDAV Final Project based on CPS-ASEC 2023.\n Note: 'Adv. Edu' stands for Advanced Education and includes Bachelor degree or higher.") + 
+  ggtitle("Share of Educational Attainment by Health Status and Race in the U.S.")
 ```
+
+When we split the population by race instead of citizenship, we continue observing an positive correlation between health and education.
+
+For instance, we see that for those people who enjoy a really good state of health, the square corresponding to advanced education is filled in green color (especially for white and asian people). This implies that it is quite probable for a person who enjoys a really good health status to have an advanced education degree. On the contrary, we can see that for these groups of people the squares associated with a low education level are dark grey. This means that it is quite unlikely that the healthiest people have not completed at least high school. 
+
+## Working on it: Expenses on Health
+
+```{r}
+
+sample <- df %>%
+  filter(Age >= 18 & Empt == "Employed" & Earn < quantile(Earn, 0.95) & MExp < quantile(MExp, 0.95) ) %>%
+  filter(Empt == "Employed") %>%
+  slice_sample(prop = 0.01)
+
+ggplot(sample, aes(x=Earn, y=MExp, label=State)) +
+  geom_point(aes(color=Health), alpha=0.5) +
+  scale_color_manual(values=c("Excellent" = "darkgreen", "Very good" = "lightgreen", "Good" = "grey", "Fair" = "orange", "Poor" = "red"))
+```
+
+
