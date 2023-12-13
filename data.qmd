@@ -189,3 +189,142 @@ Although there are no missing values, there are some questions that -by construc
 ```{r}
 nrow(df[df$Age < 15, ]) == nrow(df[df$Pwd == "NIU", ])
 ```
+
+# Results
+
+## A first overview
+
+The overall perception of self state of health of people living in the U.S. based on the Annual Social and Economic Supplement (CPS-ASEC) 2023 is as follows:
+```{r}
+library("ggplot2")
+# Perception of Self State of Health in the United States
+ggplot(df, mapping=aes(x=fct_rev(Health), weight = Wt/1e6))+
+  geom_bar(fill="#1F78B4", alpha=.6, width=.6) + 
+  geom_text(stat = "count", aes(label=sprintf("%.1fM", ..count..)), vjust = -0.2, hjust = -0.1, color = "#004080", size = 3, fontface = "bold" ) +   
+geom_text(stat = "count", aes(label = sprintf("(%.1f%%)", ..count.. / sum(..count..) * 100)),
+            vjust = 1.3, hjust = -0.1, color = "#1F78B4", size = 3, fontface = "bold") +
+  coord_flip() +
+  scale_y_continuous(labels = scales::comma, limits = c(0, 120)) +
+  labs(x = "Health Status",y = "Weighted Frequency (in millions)", caption = "Source: own elaboration for EDAV Final Project based on CPS-ASEC 2023.") + 
+  ggtitle("Perception of Self State of Health in the United States") + 
+  theme(panel.background = element_rect(fill = "white"))
+```
+As it was explained in the Data Section, the CPS-ASEC 2023 contains information on 146,133 individuals, so to build the graph for the entire population we use the variable that weights each observation.
+
+The health status category that is most reported is "Very good" with 33.2% of the population, followed by "Excellent" with a share of 28.9% and "Good" with 27%. Combined together, almost 9 out of 10 people report an at least good health status. 
+
+On the contrary, 9 million people (2.7%) suffer a poor health status and 27 million people (8.2%) a fair one.
+
+In the next sections we will study how the self state of health correlates with other dimensions such as employment, earnings, race, education, among others.
+
+## Association between Health and dimensions Race, Sex and Employment
+
+```{r}
+library("grid")
+library("forcats")
+```
+
+```{r}
+df_1 <- filter(df, (Race == "White" | Race == "Black" | Race == "Asian") & Empt == "Employed")
+df_1 <- df_1 %>% mutate(Health = fct_rev(Health))
+df_1$Race <- droplevels(df_1$Race)
+
+vcd::mosaic(
+  Health ~ Sex + Race, 
+  data = df_1, 
+  direction = c("v", "v", "h"), 
+  weight = df_1$Wt,  
+  highlighting_fill = c("red", "orange", "grey90", "lightgreen","darkgreen"),
+  labeling = vcd::labeling_border(
+    rot_labels = c(0, 0, 45, 0), 
+    gp_labels = gpar(fontsize = 7),  
+    gp_varnames = gpar(fontsize = 9, fontface = 2), 
+    just_labels = c("center", "right"), 
+    rot_varnames = c(0, 0, 0, 0)
+  ),
+  spacing = vcd::spacing_equal(sp = unit(0.3, "lines")),
+  main = "Association for Employed People"
+)
+```
+
+
+```{r}
+df_2 <- filter(df, (Race == "White" | Race == "Black" | Race == "Asian") & Empt == "Unemployed")
+df_2 <- df_2 %>% mutate(Health = fct_rev(Health))
+df_2$Race <- droplevels(df_2$Race)
+
+vcd::mosaic(
+  Health ~ Sex + Race, 
+  data = df_2, 
+  direction = c("v", "v", "h"), 
+  weight = df_1$Wt,  
+  highlighting_fill = c("red", "orange", "grey90", "lightgreen","darkgreen"),
+  labeling = vcd::labeling_border(
+    rot_labels = c(0, 0, 45, 0), 
+    gp_labels = gpar(fontsize = 7),  
+    gp_varnames = gpar(fontsize = 9, fontface = 2), 
+    just_labels = c("center", "right"), 
+    rot_varnames = c(0, 0, 0, 0)
+  ),
+  spacing = vcd::spacing_equal(sp = unit(0.3, "lines")),
+  main = "Association for Unemployed People"
+)
+```
+
+First, it is worth noting that we have drawn different graphs for employed and unemployed people, since they have different sizes.
+
+For both the employed and unemployed people, we see that the proportion of women that suffers a weak state of health is greater than the proportion of men. For employed people, it is specially more notorious for those that has fair health (i.e., the regions shaded in orange), whereas for unemployed people it is clear for both that suffer a fair or poor health (i.e., the regions shaded in orange and red). 
+
+Regarding the race, for both employed and unemployed people, the proportion of black people that suffers a weak state of health is greater than the proportion corresponding to White or Asian people. Particularly, Asian population seems to have a quite good state of health (for unemployed ones, even better than the health of white people).
+
+Comparing the two graphs, i.e. the population of employed and unemployed people, we see that for all races and sex, the employed people have a better health than the unemployed people which makes sense. In addition, the group of people that has the higher proportion of people with weak health (i.e., fair or poor health) is the black women without employment showing inequalities on health across U.S. people in terms of sex, race and employment status.
+
+In this section we have learned that there appears to be a difference in health status depending on whether a person is currently employed or unemployed. In the next section we focus on those who are employed and study whether there is a difference on health based on earnings.
+
+## How does earnings associate with health?
+
+In this section we analyze how the distribution of earnings of employed people differs based on the health status. 
+
+```{r}
+library(ggridges)
+filter(df, Empt == "Employed" & Age>=18) %>%
+ggplot(df, mapping=aes(x = Earn, y = fct_rev(Health)), weight = Wt/1e6) +
+  geom_density_ridges(fill = "blue",alpha = .5, scale = 1) +
+  geom_boxplot(pch = 21, width = 0.5, alpha = 0.3) + 
+  ggtitle("Distribution of Earnings for Employed People by Health Status") +
+  labs(y = "Health", x = "Earnings (in millions)") + 
+  scale_x_continuous(labels = scales::comma_format(scale = 1e-6)) 
+
+# The graph would be the same if we order y-axis by the median of earnings y= reorder(Health, Earn, median).
+```
+
+The previous graph is quite interesting. First, it shows that the distribution of earnings is right-skewed for every category of health status. In addition, it shows that there seems to be a positive correlation between earnings and health. Indeed, looking at the boxplots, it follows that the both the first quartile (Q1), the median and the third quartile (Q3) of earnings increases with health status. Indeed, for instance the median of people that have an "excellent" -perceived- state of health is higher than the mean of those that have a "very good" state of health, which is in turn higher than the median corresponding to people that have a "good" state of health and so on. In other words, wealthier people enjoys a better state of health than poorer people.
+
+## How does earnings associate with health?
+
+
+```{r}
+# install.packages("weights")
+library(weights)
+
+df_3 <- df %>%
+  group_by(Citz, Health, Edu) %>%
+  mutate(Subtotal = sum(Wt)) %>%
+  ungroup() %>%
+  group_by(Citz, Health) %>%
+  mutate(Total = sum(Wt)) %>%
+  ungroup()
+
+df_3 <- df %>%
+  group_by(Citz, Health, Edu) %>%
+  mutate(Total = sum(Wt)) %>%
+  ungroup()
+
+#ggplot(df_3, aes(x = Father, y = Son)) +
+ # geom_tile(aes(fill = (Freq/Total)), color = "white") +
+  #coord_fixed() + 
+  #scale_fill_gradient2(low = "black", mid = "white",
+   #                     high = "red", midpoint = .2) +
+  #facet_wrap(~Country) + theme_heat
+
+```
