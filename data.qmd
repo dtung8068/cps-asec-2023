@@ -45,6 +45,7 @@ library(data.table)
 ```
 Then, we import the selected features from the 2023 CPS-ASEC dataset using the function 'get_asec' from the package 'cpsR':
 
+
 ```{r}
 df <- get_asec(year = 2023, vars = c("PERIDNUM", "A_FNLWGT", "GESTFIPS", "GTCO", "HEA", "A_AGE", "A_SEX", "PRCITSHP","PRDTRACE", "PEMLR","A_HGA","PEARNVAL","DIS_HP","NOW_COV", "MOOP"), key="033d6fdb469d970444d91cda781be61fa0d46099", tibble = FALSE)
 ```
