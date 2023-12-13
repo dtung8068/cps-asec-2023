@@ -1,5 +1,6 @@
 # Results
 
+<<<<<<< HEAD
 ## A first overview
 
 
@@ -7,3 +8,16 @@
 
 
 
+=======
+```{r}
+library(sf)
+library(tmap)
+shapefile <- st_read("../tl_rd22_us_county/tl_rd22_us_county.shp")
+shapefile$shelf <- "Shelf"
+```
+
+```{r}
+tm_shape(shapefile) +
+  tm_polygons(col = "grey10")
+```
+>>>>>>> bf2397e87dd1b7dc9783c078a40a93c146654179
