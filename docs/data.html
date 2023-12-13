@@ -185,6 +185,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#a-first-overview" id="toc-a-first-overview" class="nav-link" data-scroll-target="#a-first-overview"><span class="header-section-number">3.1</span> A first overview</a></li>
   <li><a href="#association-between-health-and-dimensions-race-sex-and-employment" id="toc-association-between-health-and-dimensions-race-sex-and-employment" class="nav-link" data-scroll-target="#association-between-health-and-dimensions-race-sex-and-employment"><span class="header-section-number">3.2</span> Association between Health and dimensions Race, Sex and Employment</a></li>
   <li><a href="#how-does-earnings-associate-with-health" id="toc-how-does-earnings-associate-with-health" class="nav-link" data-scroll-target="#how-does-earnings-associate-with-health"><span class="header-section-number">3.3</span> How does earnings associate with health?</a></li>
+  <li><a href="#how-does-earnings-associate-with-health-1" id="toc-how-does-earnings-associate-with-health-1" class="nav-link" data-scroll-target="#how-does-earnings-associate-with-health-1"><span class="header-section-number">3.4</span> How does earnings associate with health?</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/dtung8068/cps-asec-2023/edit/main/data.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/dtung8068/cps-asec-2023/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
@@ -628,7 +629,68 @@ Adding another scale for y, which will replace the existing scale.</code></pre>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The graph would be the same if we order y-axis by the median of earnings y= reorder(Health, Earn, median).</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>The previous graph is quite interesting. It shows that there seems to be a positive correlation between earnings and health. Indeed, looking at the boxplots, it follows that the both the first quartile (Q1), the median and the third quartile (Q3) of earnings increases with health status. Indeed, for instance the median of people that have an “excellent” -perceived- state of health is higher than the mean of those that have a “very good” state of health, which is in turn higher than the median corresponding to people that have a “good” state of health and so on. In other words, wealthier people enjoys a better state of health than poorer people.</p>
+<p>The previous graph is quite interesting. First, it shows that the distribution of earnings is right-skewed for every category of health status. In addition, it shows that there seems to be a positive correlation between earnings and health. Indeed, looking at the boxplots, it follows that the both the first quartile (Q1), the median and the third quartile (Q3) of earnings increases with health status. Indeed, for instance the median of people that have an “excellent” -perceived- state of health is higher than the mean of those that have a “very good” state of health, which is in turn higher than the median corresponding to people that have a “good” state of health and so on. In other words, wealthier people enjoys a better state of health than poorer people.</p>
+</section>
+<section id="how-does-earnings-associate-with-health-1" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="how-does-earnings-associate-with-health-1"><span class="header-section-number">3.4</span> How does earnings associate with health?</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("weights")</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(weights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'weights' was built under R version 4.3.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: Hmisc</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'Hmisc'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:dplyr':
+
+    src, summarize</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:base':
+
+    format.pval, units</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'weights'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:DataExplorer':
+
+    dummify</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>df_3 <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Citz, Health, Edu) <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Subtotal =</span> <span class="fu">sum</span>(Wt)) <span class="sc">%&gt;%</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Citz, Health) <span class="sc">%&gt;%</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Total =</span> <span class="fu">sum</span>(Wt)) <span class="sc">%&gt;%</span></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>df_3 <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Citz, Health, Edu) <span class="sc">%&gt;%</span></span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Total =</span> <span class="fu">sum</span>(Wt)) <span class="sc">%&gt;%</span></span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a><span class="co">#ggplot(df_3, aes(x = Father, y = Son)) +</span></span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a> <span class="co"># geom_tile(aes(fill = (Freq/Total)), color = "white") +</span></span>
+<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">#coord_fixed() + </span></span>
+<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">#scale_fill_gradient2(low = "black", mid = "white",</span></span>
+<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>   <span class="co">#                     high = "red", midpoint = .2) +</span></span>
+<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>  <span class="co">#facet_wrap(~Country) + theme_heat</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 
 
 </section>
