@@ -185,7 +185,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#a-first-overview" id="toc-a-first-overview" class="nav-link" data-scroll-target="#a-first-overview"><span class="header-section-number">3.1</span> A first overview</a></li>
   <li><a href="#association-between-health-and-dimensions-race-sex-and-employment" id="toc-association-between-health-and-dimensions-race-sex-and-employment" class="nav-link" data-scroll-target="#association-between-health-and-dimensions-race-sex-and-employment"><span class="header-section-number">3.2</span> Association between Health and dimensions Race, Sex and Employment</a></li>
   <li><a href="#how-does-earnings-associate-with-health" id="toc-how-does-earnings-associate-with-health" class="nav-link" data-scroll-target="#how-does-earnings-associate-with-health"><span class="header-section-number">3.3</span> How does earnings associate with health?</a></li>
-  <li><a href="#how-does-earnings-associate-with-health-1" id="toc-how-does-earnings-associate-with-health-1" class="nav-link" data-scroll-target="#how-does-earnings-associate-with-health-1"><span class="header-section-number">3.4</span> How does earnings associate with health?</a></li>
+  <li><a href="#are-more-educated-people-healthier" id="toc-are-more-educated-people-healthier" class="nav-link" data-scroll-target="#are-more-educated-people-healthier"><span class="header-section-number">3.4</span> Are more educated people healthier?</a>
+  <ul class="collapse">
+  <li><a href="#analysis-by-citizenship" id="toc-analysis-by-citizenship" class="nav-link" data-scroll-target="#analysis-by-citizenship"><span class="header-section-number">3.4.1</span> Analysis by Citizenship</a></li>
+  <li><a href="#analysis-by-race" id="toc-analysis-by-race" class="nav-link" data-scroll-target="#analysis-by-race"><span class="header-section-number">3.4.2</span> Analysis by Race</a></li>
+  </ul></li>
+  <li><a href="#working-on-it-expenses-on-health" id="toc-working-on-it-expenses-on-health" class="nav-link" data-scroll-target="#working-on-it-expenses-on-health"><span class="header-section-number">3.5</span> Working on it: Expenses on Health</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/dtung8068/cps-asec-2023/edit/main/data.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/dtung8068/cps-asec-2023/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
@@ -298,7 +303,7 @@ The following object is masked from 'package:purrr':
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">get_asec</span>(<span class="at">year =</span> <span class="dv">2023</span>, <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"PERIDNUM"</span>, <span class="st">"A_FNLWGT"</span>, <span class="st">"GESTFIPS"</span>, <span class="st">"GTCO"</span>, <span class="st">"HEA"</span>, <span class="st">"A_AGE"</span>, <span class="st">"A_SEX"</span>, <span class="st">"PRCITSHP"</span>,<span class="st">"PRDTRACE"</span>, <span class="st">"PEMLR"</span>,<span class="st">"A_HGA"</span>,<span class="st">"PEARNVAL"</span>,<span class="st">"DIS_HP"</span>,<span class="st">"NOW_COV"</span>), <span class="at">key=</span><span class="st">"033d6fdb469d970444d91cda781be61fa0d46099"</span>, <span class="at">tibble =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">get_asec</span>(<span class="at">year =</span> <span class="dv">2023</span>, <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"PERIDNUM"</span>, <span class="st">"A_FNLWGT"</span>, <span class="st">"GESTFIPS"</span>, <span class="st">"GTCO"</span>, <span class="st">"HEA"</span>, <span class="st">"A_AGE"</span>, <span class="st">"A_SEX"</span>, <span class="st">"PRCITSHP"</span>,<span class="st">"PRDTRACE"</span>, <span class="st">"PEMLR"</span>,<span class="st">"A_HGA"</span>,<span class="st">"PEARNVAL"</span>,<span class="st">"DIS_HP"</span>,<span class="st">"NOW_COV"</span>, <span class="st">"MOOP"</span>), <span class="at">key=</span><span class="st">"033d6fdb469d970444d91cda781be61fa0d46099"</span>, <span class="at">tibble =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Getting CPS ASEC microdata for 2023</code></pre>
@@ -323,8 +328,9 @@ The following object is masked from 'package:purrr':
 <span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">Edu =</span> <span class="st">"a_hga"</span>,</span>
 <span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">Earn =</span> <span class="st">"pearnval"</span>,</span>
 <span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">Pwd =</span> <span class="st">"dis_hp"</span>,</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ins =</span> <span class="st">"now_cov"</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ins =</span> <span class="st">"now_cov"</span>,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">MExp =</span> <span class="st">"moop"</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Since there are certain features whose categories are too detailed for our purposes, we make the following preprocessing:</p>
@@ -351,7 +357,7 @@ The following object is masked from 'package:purrr':
 <span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Edu)</span></span>
 <span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Edu <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>Edu <span class="sc">&gt;=</span> <span class="dv">31</span> <span class="sc">&amp;</span> df<span class="sc">$</span>Edu <span class="sc">&lt;=</span> <span class="dv">38</span>, <span class="dv">30</span>, df<span class="sc">$</span>Edu)</span>
 <span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co"># We group categories 31 to 38 into 30 (than we'll label it as "High school Incomplete")</span></span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Edu <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Edu, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">39</span>, <span class="dv">40</span>, <span class="dv">41</span>, <span class="dv">42</span>, <span class="dv">43</span>, <span class="dv">44</span>, <span class="dv">45</span>, <span class="dv">46</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Children"</span>,<span class="st">"High school Incomplete"</span>, <span class="st">"High School Complete"</span>, <span class="st">"College Incomplete"</span>, <span class="st">"Associate"</span>, <span class="st">"Associate"</span>, <span class="st">"Bachelor"</span>, <span class="st">"Master"</span>, <span class="st">"Professional Degree"</span>, <span class="st">"PHD"</span>))</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Edu <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Edu, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">39</span>, <span class="dv">40</span>, <span class="dv">41</span>, <span class="dv">42</span>, <span class="dv">43</span>, <span class="dv">44</span>, <span class="dv">45</span>, <span class="dv">46</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Children"</span>,<span class="st">"H.S. Inc."</span>, <span class="st">"H.S. Compl."</span>, <span class="st">"College Inc."</span>, <span class="st">"Associate"</span>, <span class="st">"Associate"</span>, <span class="st">"Bachelor"</span>, <span class="st">"Master"</span>, <span class="st">"Professional Degree"</span>, <span class="st">"PHD"</span>))</span>
 <span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co"># We group categories 41 and 42 into "Associate"</span></span>
 <span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Edu)</span></span>
 <span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a></span>
@@ -395,7 +401,8 @@ Empt              factor
 Edu               factor
 Earn             integer
 Pwd               factor
-Ins               factor</code></pre>
+Ins               factor
+MExp             integer</code></pre>
 </div>
 </div>
 <p>Finally, we update the theme of ggplot to center the titles by default:</p>
@@ -483,8 +490,8 @@ Adding another scale for y, which will replace the existing scale.</code></pre>
 <div class="cell-output cell-output-stdout">
 <pre><code>    ID     Wt  State     Co Health    Age    Sex   Citz   Race   Empt    Edu 
      0      0      0      0      0      0      0      0      0      0      0 
-  Earn    Pwd    Ins 
-     0      0      0 </code></pre>
+  Earn    Pwd    Ins   MExp 
+     0      0      0      0 </code></pre>
 </div>
 </div>
 <p>Although there are no missing values, there are some questions that -by construction- are not asked to certain groups of people. In fact, as it can be checked on the official <a href="https://www2.census.gov/programs-surveys/cps/datasets/2023/march/asec2023_ddl_pub_full.pdf">Data Dictionary</a>, the dimensions ‘PEARNVAL’ and ‘DIS_HP’ are only available for people aged at least 15. It makes sense because ‘PEARNVAL’ refers to the earnings derived from wage or salary, or for self-employment income and ‘DIS_HP’ indicates whether or not the respondent has a disability that prevents them from working. Indeed, it can be checked that, for instance, the number of people with ‘DIS_HP’ == “NIU” that stands for “Not in Universe” equals the number of respondents up to 14 years old.</p>
@@ -631,65 +638,113 @@ Adding another scale for y, which will replace the existing scale.</code></pre>
 </div>
 <p>The previous graph is quite interesting. First, it shows that the distribution of earnings is right-skewed for every category of health status. In addition, it shows that there seems to be a positive correlation between earnings and health. Indeed, looking at the boxplots, it follows that the both the first quartile (Q1), the median and the third quartile (Q3) of earnings increases with health status. Indeed, for instance the median of people that have an “excellent” -perceived- state of health is higher than the mean of those that have a “very good” state of health, which is in turn higher than the median corresponding to people that have a “good” state of health and so on. In other words, wealthier people enjoys a better state of health than poorer people.</p>
 </section>
-<section id="how-does-earnings-associate-with-health-1" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="how-does-earnings-associate-with-health-1"><span class="header-section-number">3.4</span> How does earnings associate with health?</h2>
+<section id="are-more-educated-people-healthier" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="are-more-educated-people-healthier"><span class="header-section-number">3.4</span> Are more educated people healthier?</h2>
+<p>In this section we study whether or not more educated people are healthier. In particular, we analyze the different shares of educational attainment for each level of health status.</p>
+<p>In the first part we split the population (aged 18 or more) by citizenship, and in the second part by race.</p>
+<section id="analysis-by-citizenship" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="analysis-by-citizenship"><span class="header-section-number">3.4.1</span> Analysis by Citizenship</h3>
+<p>The following graph shows the shares of the population with different educational attainment for the each level of health status, by citizenship.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("weights")</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(weights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Edu_Grouped =</span> <span class="fu">case_when</span>(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    Edu <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"College Inc."</span>, <span class="st">"Associate"</span>) <span class="sc">~</span> <span class="st">"College Inc/Assoc."</span>,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    Edu <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Bachelor"</span>, <span class="st">"Master"</span>, <span class="st">"Professional Degree"</span>, <span class="st">"PHD"</span>) <span class="sc">~</span> <span class="st">"Adv. Edu"</span>,</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> Edu</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>df_3 <span class="ot">&lt;-</span> <span class="fu">filter</span>(df, Age<span class="sc">&gt;=</span><span class="dv">18</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Citz, Health, Edu_Grouped) <span class="sc">%&gt;%</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarize</span>(<span class="at">Freq =</span> <span class="fu">sum</span>(Wt))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'weights' was built under R version 4.3.2</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: Hmisc</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'Hmisc'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:dplyr':
-
-    src, summarize</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following objects are masked from 'package:base':
-
-    format.pval, units</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'weights'</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>The following object is masked from 'package:DataExplorer':
-
-    dummify</code></pre>
+<pre><code>`summarise()` has grouped output by 'Citz', 'Health'. You can override using
+the `.groups` argument.</code></pre>
 </div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>df_3 <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Citz, Health, Edu) <span class="sc">%&gt;%</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Subtotal =</span> <span class="fu">sum</span>(Wt)) <span class="sc">%&gt;%</span></span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Citz, Health) <span class="sc">%&gt;%</span></span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Total =</span> <span class="fu">sum</span>(Wt)) <span class="sc">%&gt;%</span></span>
-<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>df_3 <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
-<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Citz, Health, Edu) <span class="sc">%&gt;%</span></span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Total =</span> <span class="fu">sum</span>(Wt)) <span class="sc">%&gt;%</span></span>
-<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
-<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a><span class="co">#ggplot(df_3, aes(x = Father, y = Son)) +</span></span>
-<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a> <span class="co"># geom_tile(aes(fill = (Freq/Total)), color = "white") +</span></span>
-<span id="cb41-16"><a href="#cb41-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">#coord_fixed() + </span></span>
-<span id="cb41-17"><a href="#cb41-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">#scale_fill_gradient2(low = "black", mid = "white",</span></span>
-<span id="cb41-18"><a href="#cb41-18" aria-hidden="true" tabindex="-1"></a>   <span class="co">#                     high = "red", midpoint = .2) +</span></span>
-<span id="cb41-19"><a href="#cb41-19" aria-hidden="true" tabindex="-1"></a>  <span class="co">#facet_wrap(~Country) + theme_heat</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>df_3 <span class="ot">&lt;-</span> df_3 <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Citz, Health) <span class="sc">%&gt;%</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Total =</span> <span class="fu">sum</span>(Freq)) <span class="sc">%&gt;%</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_3, <span class="fu">aes</span>(<span class="at">x =</span> Edu_Grouped, <span class="at">y =</span> Health)) <span class="sc">+</span></span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> (Freq<span class="sc">/</span>Total)), <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span> </span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"black"</span>, <span class="at">mid =</span> <span class="st">"white"</span>,</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">high =</span> <span class="st">"green"</span>, <span class="at">midpoint =</span> .<span class="dv">2</span>, <span class="at">name =</span> <span class="st">"Share"</span>) <span class="sc">+</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Citz) <span class="sc">+</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Educational Attainment"</span>, <span class="at">caption =</span> <span class="st">"Source: own elaboration for EDAV Final Project based on CPS-ASEC 2023.</span><span class="sc">\n</span><span class="st"> Note: 'Adv. Edu' stands for Advanced Education and includes Bachelor degree or higher."</span>) <span class="sc">+</span> </span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Share of Educational Attainment by Health Status and Citizenship in the U.S."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Let us analyze first the graph corresponding to Native U.S. citizens.</p>
+<p>We see that for those people who enjoy an excellent or very good state of health, the square corresponding to the ‘Adv edu’ (which stands for ‘Advanced Education’, i.e., bachelor degree or higher) is filled in green color. This implies that it is quite probable for a person who enjoys a really good health status to have an advanced education degree. On the contrary, we can see that for these groups of people the squares associated with ‘H.S. Inc’ (High School Incomplete) are dark grey. This means that it is quite unlikely that the healthiest people have not completed at least high school.</p>
+<p>On the other hand, if we analyze people who suffer a weak state of health (i.e., a poor or fair one) we see that the squares corresponding to advanced education are ‘not longer’ green, instead they are grey and white. This shows that for people with weak health it is quite unlikely to have an advanced level of education. On the contrary, as it can be seen on the graph, it is quite probable to ‘only’ have reached a high school degree.</p>
+<p>This positive correlation between health and educational attainment can be also understood in a different way. For the columns corresponding to higher levels of education (i.e., advanced education), the colors range from darker grey colors at the top (poor health) to green colors at the bottom (excellent health), whereas something opposite occurs for more basic levels of education.</p>
+<p>Something similar happens to the other citizenship categories such as “Naturalized” or “Not U.S. Citizen”. It is particularly interesting to note that for those non U.S. citizens that suffer a weak state of health (i.e., poor or fair) it is quite likely to have a poor level of education since the corresponding squares are green.</p>
+</section>
+<section id="analysis-by-race" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="analysis-by-race"><span class="header-section-number">3.4.2</span> Analysis by Race</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>df_4 <span class="ot">&lt;-</span> <span class="fu">filter</span>(df, Age<span class="sc">&gt;=</span><span class="dv">18</span> <span class="sc">&amp;</span> (Race <span class="sc">==</span> <span class="st">"White"</span> <span class="sc">|</span> Race <span class="sc">==</span> <span class="st">"Black"</span> <span class="sc">|</span> Race <span class="sc">==</span> <span class="st">"Asian"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Race, Health, Edu_Grouped) <span class="sc">%&gt;%</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarize</span>(<span class="at">Freq =</span> <span class="fu">sum</span>(Wt))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'Race', 'Health'. You can override using
+the `.groups` argument.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>df_4 <span class="ot">&lt;-</span> df_4 <span class="sc">%&gt;%</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Race, Health) <span class="sc">%&gt;%</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Total =</span> <span class="fu">sum</span>(Freq)) <span class="sc">%&gt;%</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_4, <span class="fu">aes</span>(<span class="at">x =</span> Edu_Grouped, <span class="at">y =</span> Health)) <span class="sc">+</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> (Freq<span class="sc">/</span>Total)), <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span> </span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"black"</span>, <span class="at">mid =</span> <span class="st">"white"</span>,</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">high =</span> <span class="st">"green"</span>, <span class="at">midpoint =</span> .<span class="dv">2</span>, <span class="at">name =</span> <span class="st">"Share"</span>) <span class="sc">+</span></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Race) <span class="sc">+</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Educational Attainment"</span>, <span class="at">caption =</span> <span class="st">"Source: own elaboration for EDAV Final Project based on CPS-ASEC 2023.</span><span class="sc">\n</span><span class="st"> Note: 'Adv. Edu' stands for Advanced Education and includes Bachelor degree or higher."</span>) <span class="sc">+</span> </span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Share of Educational Attainment by Health Status and Race in the U.S."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>When we split the population by race instead of citizenship, we continue observing an positive correlation between health and education.</p>
+<p>For instance, we see that for those people who enjoy a really good state of health, the square corresponding to advanced education is filled in green color (especially for white and asian people). This implies that it is quite probable for a person who enjoys a really good health status to have an advanced education degree. On the contrary, we can see that for these groups of people the squares associated with a low education level are dark grey. This means that it is quite unlikely that the healthiest people have not completed at least high school.</p>
+</section>
+</section>
+<section id="working-on-it-expenses-on-health" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="working-on-it-expenses-on-health"><span class="header-section-number">3.5</span> Working on it: Expenses on Health</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>sample <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Age <span class="sc">&gt;=</span> <span class="dv">18</span> <span class="sc">&amp;</span> Empt <span class="sc">==</span> <span class="st">"Employed"</span> <span class="sc">&amp;</span> Earn <span class="sc">&lt;</span> <span class="fu">quantile</span>(Earn, <span class="fl">0.95</span>) <span class="sc">&amp;</span> MExp <span class="sc">&lt;</span> <span class="fu">quantile</span>(MExp, <span class="fl">0.95</span>) ) <span class="sc">%&gt;%</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Empt <span class="sc">==</span> <span class="st">"Employed"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">prop =</span> <span class="fl">0.01</span>)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sample, <span class="fu">aes</span>(<span class="at">x=</span>Earn, <span class="at">y=</span>MExp, <span class="at">label=</span>State)) <span class="sc">+</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color=</span>Health), <span class="at">alpha=</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"Excellent"</span> <span class="ot">=</span> <span class="st">"darkgreen"</span>, <span class="st">"Very good"</span> <span class="ot">=</span> <span class="st">"lightgreen"</span>, <span class="st">"Good"</span> <span class="ot">=</span> <span class="st">"grey"</span>, <span class="st">"Fair"</span> <span class="ot">=</span> <span class="st">"orange"</span>, <span class="st">"Poor"</span> <span class="ot">=</span> <span class="st">"red"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="data_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+</div>
 </div>
 
 
