@@ -4,10 +4,25 @@
   * {
     font-family: sans-serif;
   }
-</style> 
-
+</style>
 <div id="plot">
-</div>
-
+<svg id="mosaic">
+</svg></div>
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 <script src="scripts/myscript.js"></script>
+<script>
+d3.csv('data/df.csv').then(function(data) {
+  for(i = 1; i < data.columns.length; i++) {
+    let new_div = d3.select('#plot').data(data.columns).append('div')
+    new_div.append('input')
+      .attr('type', 'checkbox')
+      .attr('id', data.columns[i])
+      .attr('onchange', 'loadGraphs(this.value)')
+      .attr('name', data.columns[i])
+    new_div.append('label')
+      .attr('for', data.columns[i])
+      .text(data.columns[i])
+  }
+});
+</script>
+
