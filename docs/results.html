@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -61,6 +95,14 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.2/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet">
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
 
 
 </head>
@@ -143,6 +185,14 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#a-first-overview" id="toc-a-first-overview" class="nav-link active" data-scroll-target="#a-first-overview"><span class="header-section-number">3.1</span> A first overview</a></li>
+  <li><a href="#association-between-health-and-dimensions-race-sex-and-employment" id="toc-association-between-health-and-dimensions-race-sex-and-employment" class="nav-link" data-scroll-target="#association-between-health-and-dimensions-race-sex-and-employment"><span class="header-section-number">3.2</span> Association between Health and dimensions Race, Sex and Employment</a></li>
+  <li><a href="#how-does-earnings-associate-with-health" id="toc-how-does-earnings-associate-with-health" class="nav-link" data-scroll-target="#how-does-earnings-associate-with-health"><span class="header-section-number">3.3</span> How does earnings associate with health?</a></li>
+  <li><a href="#are-more-educated-people-healthier" id="toc-are-more-educated-people-healthier" class="nav-link" data-scroll-target="#are-more-educated-people-healthier"><span class="header-section-number">3.4</span> Are more educated people healthier?</a>
+  <ul class="collapse">
+  <li><a href="#analysis-by-citizenship" id="toc-analysis-by-citizenship" class="nav-link" data-scroll-target="#analysis-by-citizenship"><span class="header-section-number">3.4.1</span> Analysis by Citizenship</a></li>
+  <li><a href="#analysis-by-race" id="toc-analysis-by-race" class="nav-link" data-scroll-target="#analysis-by-race"><span class="header-section-number">3.4.2</span> Analysis by Race</a></li>
+  </ul></li>
+  <li><a href="#working-on-it-expenses-on-health" id="toc-working-on-it-expenses-on-health" class="nav-link" data-scroll-target="#working-on-it-expenses-on-health"><span class="header-section-number">3.5</span> Working on it: Expenses on Health</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/dtung8068/cps-asec-2023/edit/main/results.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/dtung8068/cps-asec-2023/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -166,8 +216,487 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD ## Preprocessing</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cpsR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'cpsR' was built under R version 4.3.2</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'forcats' was built under R version 4.3.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.3     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.3     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DataExplorer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'DataExplorer' was built under R version 4.3.2</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'data.table'
+
+The following objects are masked from 'package:lubridate':
+
+    hour, isoweek, mday, minute, month, quarter, second, wday, week,
+    yday, year
+
+The following objects are masked from 'package:dplyr':
+
+    between, first, last
+
+The following object is masked from 'package:purrr':
+
+    transpose</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">get_asec</span>(<span class="at">year =</span> <span class="dv">2023</span>, <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"PERIDNUM"</span>, <span class="st">"A_FNLWGT"</span>, <span class="st">"GESTFIPS"</span>, <span class="st">"GTCO"</span>, <span class="st">"HEA"</span>, <span class="st">"A_AGE"</span>, <span class="st">"A_SEX"</span>, <span class="st">"PRCITSHP"</span>,<span class="st">"PRDTRACE"</span>, <span class="st">"PEMLR"</span>,<span class="st">"A_HGA"</span>,<span class="st">"PEARNVAL"</span>,<span class="st">"DIS_HP"</span>,<span class="st">"NOW_COV"</span>, <span class="st">"MOOP"</span>, <span class="st">"PTOTVAL"</span>), <span class="at">key=</span><span class="st">"033d6fdb469d970444d91cda781be61fa0d46099"</span>, <span class="at">tibble =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Getting CPS ASEC microdata for 2023</code></pre>
+</div>
+</div>
+<p>We rename each variable as follows:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ID =</span> <span class="st">"peridnum"</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Wt =</span> <span class="st">"a_fnlwgt"</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">State =</span> <span class="st">"gestfips"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Co =</span> <span class="st">"gtco"</span>, <span class="co"># County</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Health =</span> <span class="st">"hea"</span>,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Age =</span> <span class="st">"a_age"</span>,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sex =</span> <span class="st">"a_sex"</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">Citz =</span> <span class="st">"prcitshp"</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">Race =</span> <span class="st">"prdtrace"</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">Empt =</span> <span class="st">"pemlr"</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">Edu =</span> <span class="st">"a_hga"</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">Earn =</span> <span class="st">"pearnval"</span>,</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">Pwd =</span> <span class="st">"dis_hp"</span>,</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ins =</span> <span class="st">"now_cov"</span>,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">MExp =</span> <span class="st">"moop"</span>,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">Inc =</span> <span class="st">"ptotval"</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>Since there are certain features whose categories are too detailed for our purposes, we make the following preprocessing:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">### Sex </span><span class="al">###</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Sex <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Sex, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Male"</span>, <span class="st">"Female"</span>))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="do">### Citizenship </span><span class="al">###</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Citz <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Citz, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Native"</span>, <span class="st">"Native"</span>, <span class="st">"Native"</span>, <span class="st">"Naturalized"</span>, <span class="st">"Not US Citizen"</span>))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># We group:</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     categories 1 (Native, born in the US), 2 (Native, born in PR or US outlying are) and 3 (Native, born abroad of US parent(s)) into "Native". </span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Citz)</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="do">### Employment </span><span class="al">###</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Empt <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Empt, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"NIU"</span>,<span class="st">"Employed"</span>, <span class="st">"Employed"</span>, <span class="st">"Unemployed"</span>, <span class="st">"Unemployed"</span>, <span class="st">"Retired"</span>, <span class="st">"Disabled"</span>, <span class="st">"Other"</span>))</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co"># We group: </span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">#     categories 1 (Employed - at work) and 2 (Employed - absent) into "Employed"</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">#     categories 3 (Unemployed - on layoff) and 4 (Unemployed - looking) into "Unemployed". </span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Empt)</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="do">### Education </span><span class="al">###</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Edu)</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Edu <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>Edu <span class="sc">&gt;=</span> <span class="dv">31</span> <span class="sc">&amp;</span> df<span class="sc">$</span>Edu <span class="sc">&lt;=</span> <span class="dv">38</span>, <span class="dv">30</span>, df<span class="sc">$</span>Edu)</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co"># We group categories 31 to 38 into 30 (than we'll label it as "High school Incomplete")</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Edu <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Edu, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">30</span>, <span class="dv">39</span>, <span class="dv">40</span>, <span class="dv">41</span>, <span class="dv">42</span>, <span class="dv">43</span>, <span class="dv">44</span>, <span class="dv">45</span>, <span class="dv">46</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Children"</span>,<span class="st">"H.S. Inc."</span>, <span class="st">"H.S. Compl."</span>, <span class="st">"College Inc."</span>, <span class="st">"Associate"</span>, <span class="st">"Associate"</span>, <span class="st">"Bachelor"</span>, <span class="st">"Master"</span>, <span class="st">"Professional Degree"</span>, <span class="st">"PHD"</span>))</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co"># We group categories 41 and 42 into "Associate"</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Edu)</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="do">### Race </span><span class="al">###</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Race)</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Race <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(df<span class="sc">$</span>Race <span class="sc">&gt;=</span> <span class="dv">6</span>, <span class="dv">6</span>, df<span class="sc">$</span>Race)</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Race <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Race, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"White"</span>,<span class="st">"Black"</span>, <span class="st">"American Indian"</span>, <span class="st">"Asian"</span>, <span class="st">"Pacific Islander"</span>, <span class="st">"Mixed"</span>))</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Race)</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="do">### Disabled </span><span class="al">###</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Pwd <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Pwd, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"NIU"</span>, <span class="st">"Yes"</span>, <span class="st">"No"</span>))</span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Pwd)</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a><span class="do">### Health Status </span><span class="al">###</span></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Health <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Health, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Excellent"</span>, <span class="st">"Very good"</span>, <span class="st">"Good"</span>, <span class="st">"Fair"</span>, <span class="st">"Poor"</span>))</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a><span class="co">#table(df$Health)</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a><span class="do">### Insurance Coverage </span><span class="al">###</span></span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>Ins <span class="ot">&lt;-</span> <span class="fu">factor</span>(df<span class="sc">$</span>Ins, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Yes"</span>, <span class="st">"No"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>For instance, we have grouped the categories 1 (Employed - at work) and 2 (Employed - absent) into “Employed” on the feature that indicates the employment status.</p>
+<p>To see the column types:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="fu">sapply</span>(df,class))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>       sapply.df..class.
+ID               numeric
+Wt               numeric
+State            integer
+Co               integer
+Health            factor
+Age              integer
+Sex               factor
+Citz              factor
+Race              factor
+Empt              factor
+Edu               factor
+Earn             integer
+Pwd               factor
+Ins               factor
+MExp             integer
+Inc              integer</code></pre>
+</div>
+</div>
+<p>Finally, we update the theme of ggplot to center the titles by default:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_update</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <section id="a-first-overview" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="a-first-overview"><span class="header-section-number">3.1</span> A first overview</h2>
+<p>The overall perception of self state of health of people living in the U.S. based on the Annual Social and Economic Supplement (CPS-ASEC) 2023 is as follows:</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"ggplot2"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Perception of Self State of Health in the United States</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">x=</span><span class="fu">fct_rev</span>(Health), <span class="at">weight =</span> Wt<span class="sc">/</span><span class="fl">1e6</span>))<span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">fill=</span><span class="st">"#1F78B4"</span>, <span class="at">alpha=</span>.<span class="dv">6</span>, <span class="at">width=</span>.<span class="dv">6</span>) <span class="sc">+</span> </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label=</span><span class="fu">sprintf</span>(<span class="st">"%.1fM"</span>, ..count..)), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.2</span>, <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.1</span>, <span class="at">color =</span> <span class="st">"#004080"</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">fontface =</span> <span class="st">"bold"</span> ) <span class="sc">+</span>   </span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="fu">geom_text</span>(<span class="at">stat =</span> <span class="st">"count"</span>, <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">sprintf</span>(<span class="st">"(%.1f%%)"</span>, ..count.. <span class="sc">/</span> <span class="fu">sum</span>(..count..) <span class="sc">*</span> <span class="dv">100</span>)),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">vjust =</span> <span class="fl">1.3</span>, <span class="at">hjust =</span> <span class="sc">-</span><span class="fl">0.1</span>, <span class="at">color =</span> <span class="st">"#1F78B4"</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">fontface =</span> <span class="st">"bold"</span>) <span class="sc">+</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>comma, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">120</span>)) <span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Health Status"</span>,<span class="at">y =</span> <span class="st">"Weighted Frequency (in millions)"</span>, <span class="at">caption =</span> <span class="st">"Source: own elaboration for EDAV Final Project based on CPS-ASEC 2023."</span>) <span class="sc">+</span> </span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Perception of Self State of Health in the United States"</span>) <span class="sc">+</span> </span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">"white"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: The dot-dot notation (`..count..`) was deprecated in ggplot2 3.4.0.
+ℹ Please use `after_stat(count)` instead.</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>As it was explained in the Data Section, the CPS-ASEC 2023 contains information on 146,133 individuals, so to build the graph for the entire population we use the variable that weights each observation.</p>
+<p>The health status category that is most reported is “Very good” with 33.2% of the population, followed by “Excellent” with a share of 28.9% and “Good” with 27%. Combined together, almost 9 out of 10 people report an at least good health status.</p>
+<p>On the contrary, 9 million people (2.7%) suffer a poor health status and 27 million people (8.2%) a fair one.</p>
+<p>In the next sections we will study how the self state of health correlates with other dimensions such as employment, earnings, race, education, among others.</p>
+</section>
+<section id="association-between-health-and-dimensions-race-sex-and-employment" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="association-between-health-and-dimensions-race-sex-and-employment"><span class="header-section-number">3.2</span> Association between Health and dimensions Race, Sex and Employment</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"grid"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"forcats"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>df_1 <span class="ot">&lt;-</span> <span class="fu">filter</span>(df, (Race <span class="sc">==</span> <span class="st">"White"</span> <span class="sc">|</span> Race <span class="sc">==</span> <span class="st">"Black"</span> <span class="sc">|</span> Race <span class="sc">==</span> <span class="st">"Asian"</span>) <span class="sc">&amp;</span> Empt <span class="sc">==</span> <span class="st">"Employed"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>df_1 <span class="ot">&lt;-</span> df_1 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Health =</span> <span class="fu">fct_rev</span>(Health))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>df_1<span class="sc">$</span>Race <span class="ot">&lt;-</span> <span class="fu">droplevels</span>(df_1<span class="sc">$</span>Race)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>vcd<span class="sc">::</span><span class="fu">mosaic</span>(</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  Health <span class="sc">~</span> Sex <span class="sc">+</span> Race, </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_1, </span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">direction =</span> <span class="fu">c</span>(<span class="st">"v"</span>, <span class="st">"v"</span>, <span class="st">"h"</span>), </span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">weight =</span> df_1<span class="sc">$</span>Wt,  </span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">highlighting_fill =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"orange"</span>, <span class="st">"grey90"</span>, <span class="st">"lightgreen"</span>,<span class="st">"darkgreen"</span>),</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">labeling =</span> vcd<span class="sc">::</span><span class="fu">labeling_border</span>(</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">rot_labels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">45</span>, <span class="dv">0</span>), </span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">gp_labels =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">7</span>),  </span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">gp_varnames =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">9</span>, <span class="at">fontface =</span> <span class="dv">2</span>), </span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">just_labels =</span> <span class="fu">c</span>(<span class="st">"center"</span>, <span class="st">"right"</span>), </span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">rot_varnames =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">spacing =</span> vcd<span class="sc">::</span><span class="fu">spacing_equal</span>(<span class="at">sp =</span> <span class="fu">unit</span>(<span class="fl">0.3</span>, <span class="st">"lines"</span>)),</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Association for Employed People"</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df_2 <span class="ot">&lt;-</span> <span class="fu">filter</span>(df, (Race <span class="sc">==</span> <span class="st">"White"</span> <span class="sc">|</span> Race <span class="sc">==</span> <span class="st">"Black"</span> <span class="sc">|</span> Race <span class="sc">==</span> <span class="st">"Asian"</span>) <span class="sc">&amp;</span> Empt <span class="sc">==</span> <span class="st">"Unemployed"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>df_2 <span class="ot">&lt;-</span> df_2 <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">Health =</span> <span class="fu">fct_rev</span>(Health))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>df_2<span class="sc">$</span>Race <span class="ot">&lt;-</span> <span class="fu">droplevels</span>(df_2<span class="sc">$</span>Race)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>vcd<span class="sc">::</span><span class="fu">mosaic</span>(</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  Health <span class="sc">~</span> Sex <span class="sc">+</span> Race, </span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> df_2, </span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">direction =</span> <span class="fu">c</span>(<span class="st">"v"</span>, <span class="st">"v"</span>, <span class="st">"h"</span>), </span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">weight =</span> df_1<span class="sc">$</span>Wt,  </span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">highlighting_fill =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"orange"</span>, <span class="st">"grey90"</span>, <span class="st">"lightgreen"</span>,<span class="st">"darkgreen"</span>),</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">labeling =</span> vcd<span class="sc">::</span><span class="fu">labeling_border</span>(</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">rot_labels =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">45</span>, <span class="dv">0</span>), </span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">gp_labels =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">7</span>),  </span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">gp_varnames =</span> <span class="fu">gpar</span>(<span class="at">fontsize =</span> <span class="dv">9</span>, <span class="at">fontface =</span> <span class="dv">2</span>), </span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">just_labels =</span> <span class="fu">c</span>(<span class="st">"center"</span>, <span class="st">"right"</span>), </span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">rot_varnames =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">spacing =</span> vcd<span class="sc">::</span><span class="fu">spacing_equal</span>(<span class="at">sp =</span> <span class="fu">unit</span>(<span class="fl">0.3</span>, <span class="st">"lines"</span>)),</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">main =</span> <span class="st">"Association for Unemployed People"</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>First, it is worth noting that we have drawn different graphs for employed and unemployed people, since they have different sizes.</p>
+<p>For both the employed and unemployed people, we see that the proportion of women that suffers a weak state of health is greater than the proportion of men. For employed people, it is specially more notorious for those that has fair health (i.e., the regions shaded in orange), whereas for unemployed people it is clear for both that suffer a fair or poor health (i.e., the regions shaded in orange and red).</p>
+<p>Regarding the race, for both employed and unemployed people, the proportion of black people that suffers a weak state of health is greater than the proportion corresponding to White or Asian people. Particularly, Asian population seems to have a quite good state of health (for unemployed ones, even better than the health of white people).</p>
+<p>Comparing the two graphs, i.e.&nbsp;the population of employed and unemployed people, we see that for all races and sex, the employed people have a better health than the unemployed people which makes sense. In addition, the group of people that has the higher proportion of people with weak health (i.e., fair or poor health) is the black women without employment showing inequalities on health across U.S. people in terms of sex, race and employment status.</p>
+<p>In this section we have learned that there appears to be a difference in health status depending on whether a person is currently employed or unemployed. In the next section we focus on those who are employed and study whether there is a difference on health based on earnings.</p>
+</section>
+<section id="how-does-earnings-associate-with-health" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="how-does-earnings-associate-with-health"><span class="header-section-number">3.3</span> How does earnings associate with health?</h2>
+<p>In this section we analyze how the distribution of earnings of employed people differs based on the health status.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggridges)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">filter</span>(df, Empt <span class="sc">==</span> <span class="st">"Employed"</span> <span class="sc">&amp;</span> Age<span class="sc">&gt;=</span><span class="dv">18</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="at">mapping=</span><span class="fu">aes</span>(<span class="at">x =</span> Earn, <span class="at">y =</span> <span class="fu">fct_rev</span>(Health)), <span class="at">weight =</span> Wt<span class="sc">/</span><span class="fl">1e6</span>) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density_ridges</span>(<span class="at">fill =</span> <span class="st">"blue"</span>,<span class="at">alpha =</span> .<span class="dv">5</span>, <span class="at">scale =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">pch =</span> <span class="dv">21</span>, <span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span> </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Distribution of Earnings for Employed People by Health Status"</span>) <span class="sc">+</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Health"</span>, <span class="at">x =</span> <span class="st">"Earnings (in millions)"</span>) <span class="sc">+</span> </span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">scale =</span> <span class="fl">1e-6</span>),<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1200000</span>)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Picking joint bandwidth of 5530</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 98 rows containing non-finite values
+(`stat_density_ridges()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 98 rows containing non-finite values (`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The graph would be the same if we order y-axis by the median of earnings y= reorder(Health, Earn, median).</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>The previous graph is quite interesting. First, it shows that the distribution of earnings is right-skewed for every category of health status. In addition, it shows that there seems to be a positive correlation between earnings and health. Indeed, looking at the boxplots, it follows that the both the first quartile (Q1), the median and the third quartile (Q3) of earnings increases with health status. Indeed, for instance the median of people that have an “excellent” -perceived- state of health is higher than the mean of those that have a “very good” state of health, which is in turn higher than the median corresponding to people that have a “good” state of health and so on. In other words, wealthier people enjoys a better state of health than poorer people.</p>
+</section>
+<section id="are-more-educated-people-healthier" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="are-more-educated-people-healthier"><span class="header-section-number">3.4</span> Are more educated people healthier?</h2>
+<p>In this section we study whether or not more educated people are healthier. In particular, we analyze the different shares of educational attainment for each level of health status.</p>
+<p>In the first part we split the population (aged 18 or more) by citizenship, and in the second part by race.</p>
+<section id="analysis-by-citizenship" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="analysis-by-citizenship"><span class="header-section-number">3.4.1</span> Analysis by Citizenship</h3>
+<p>The following graph shows the shares of the population with different educational attainment for the each level of health status, by citizenship.</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Edu_Grouped =</span> <span class="fu">case_when</span>(</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    Edu <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"College Inc."</span>, <span class="st">"Associate"</span>) <span class="sc">~</span> <span class="st">"College Inc/Assoc."</span>,</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    Edu <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Bachelor"</span>, <span class="st">"Master"</span>, <span class="st">"Professional Degree"</span>, <span class="st">"PHD"</span>) <span class="sc">~</span> <span class="st">"Adv. Edu"</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> Edu</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>df_3 <span class="ot">&lt;-</span> <span class="fu">filter</span>(df, Age<span class="sc">&gt;=</span><span class="dv">18</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Citz, Health, Edu_Grouped) <span class="sc">%&gt;%</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarize</span>(<span class="at">Freq =</span> <span class="fu">sum</span>(Wt))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'Citz', 'Health'. You can override using
+the `.groups` argument.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df_3 <span class="ot">&lt;-</span> df_3 <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Citz, Health) <span class="sc">%&gt;%</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Total =</span> <span class="fu">sum</span>(Freq)) <span class="sc">%&gt;%</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_3, <span class="fu">aes</span>(<span class="at">x =</span> Edu_Grouped, <span class="at">y =</span> Health)) <span class="sc">+</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> (Freq<span class="sc">/</span>Total)), <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span> </span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"black"</span>, <span class="at">mid =</span> <span class="st">"white"</span>,</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">high =</span> <span class="st">"green"</span>, <span class="at">midpoint =</span> .<span class="dv">2</span>, <span class="at">name =</span> <span class="st">"Share"</span>) <span class="sc">+</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Citz) <span class="sc">+</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Educational Attainment"</span>, <span class="at">caption =</span> <span class="st">"Source: own elaboration for EDAV Final Project based on CPS-ASEC 2023.</span><span class="sc">\n</span><span class="st"> Note: 'Adv. Edu' stands for Advanced Education and includes Bachelor degree or higher."</span>) <span class="sc">+</span> </span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Share of Educational Attainment by Health Status and Citizenship in the U.S."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Let us analyze first the graph corresponding to Native U.S. citizens.</p>
+<p>We see that for those people who enjoy an excellent or very good state of health, the square corresponding to the ‘Adv edu’ (which stands for ‘Advanced Education’, i.e., bachelor degree or higher) is filled in green color. This implies that it is quite probable for a person who enjoys a really good health status to have an advanced education degree. On the contrary, we can see that for these groups of people the squares associated with ‘H.S. Inc’ (High School Incomplete) are dark grey. This means that it is quite unlikely that the healthiest people have not completed at least high school.</p>
+<p>On the other hand, if we analyze people who suffer a weak state of health (i.e., a poor or fair one) we see that the squares corresponding to advanced education are ‘not longer’ green, instead they are grey and white. This shows that for people with weak health it is quite unlikely to have an advanced level of education. On the contrary, as it can be seen on the graph, it is quite probable to ‘only’ have reached a high school degree.</p>
+<p>This positive correlation between health and educational attainment can be also understood in a different way. For the columns corresponding to higher levels of education (i.e., advanced education), the colors range from darker grey colors at the top (poor health) to green colors at the bottom (excellent health), whereas something opposite occurs for more basic levels of education.</p>
+<p>Something similar happens to the other citizenship categories such as “Naturalized” or “Not U.S. Citizen”. It is particularly interesting to note that for those non U.S. citizens that suffer a weak state of health (i.e., poor or fair) it is quite likely to have a poor level of education since the corresponding squares are green.</p>
+</section>
+<section id="analysis-by-race" class="level3" data-number="3.4.2">
+<h3 data-number="3.4.2" class="anchored" data-anchor-id="analysis-by-race"><span class="header-section-number">3.4.2</span> Analysis by Race</h3>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>df_4 <span class="ot">&lt;-</span> <span class="fu">filter</span>(df, Age<span class="sc">&gt;=</span><span class="dv">18</span> <span class="sc">&amp;</span> (Race <span class="sc">==</span> <span class="st">"White"</span> <span class="sc">|</span> Race <span class="sc">==</span> <span class="st">"Black"</span> <span class="sc">|</span> Race <span class="sc">==</span> <span class="st">"Asian"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Race, Health, Edu_Grouped) <span class="sc">%&gt;%</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">summarize</span>(<span class="at">Freq =</span> <span class="fu">sum</span>(Wt))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'Race', 'Health'. You can override using
+the `.groups` argument.</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>df_4 <span class="ot">&lt;-</span> df_4 <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Race, Health) <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Total =</span> <span class="fu">sum</span>(Freq)) <span class="sc">%&gt;%</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_4, <span class="fu">aes</span>(<span class="at">x =</span> Edu_Grouped, <span class="at">y =</span> Health)) <span class="sc">+</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="fu">aes</span>(<span class="at">fill =</span> (Freq<span class="sc">/</span>Total)), <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>() <span class="sc">+</span> </span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient2</span>(<span class="at">low =</span> <span class="st">"black"</span>, <span class="at">mid =</span> <span class="st">"white"</span>,</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>                        <span class="at">high =</span> <span class="st">"green"</span>, <span class="at">midpoint =</span> .<span class="dv">2</span>, <span class="at">name =</span> <span class="st">"Share"</span>) <span class="sc">+</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Race) <span class="sc">+</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="dv">0</span>)) <span class="sc">+</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Educational Attainment"</span>, <span class="at">caption =</span> <span class="st">"Source: own elaboration for EDAV Final Project based on CPS-ASEC 2023.</span><span class="sc">\n</span><span class="st"> Note: 'Adv. Edu' stands for Advanced Education and includes Bachelor degree or higher."</span>) <span class="sc">+</span> </span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Share of Educational Attainment by Health Status and Race in the U.S."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<p><img src="results_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>When we split the population by race instead of citizenship, we continue observing an positive correlation between health and education.</p>
+<p>For instance, we see that for those people who enjoy a really good state of health, the square corresponding to advanced education is filled in green color (especially for white and asian people). This implies that it is quite probable for a person who enjoys a really good health status to have an advanced education degree. On the contrary, we can see that for these groups of people the squares associated with a low education level are dark grey. This means that it is quite unlikely that the healthiest people have not completed at least high school.</p>
+</section>
+</section>
+<section id="working-on-it-expenses-on-health" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="working-on-it-expenses-on-health"><span class="header-section-number">3.5</span> Working on it: Expenses on Health</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3267</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>samp_idx <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(df)), <span class="at">size=</span><span class="dv">300</span>, <span class="at">prob=</span>df<span class="sc">$</span>Wt)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>new_data <span class="ot">&lt;-</span> df[samp_idx, ]</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(new_data, <span class="fu">aes</span>(<span class="at">x =</span> Inc, <span class="at">y =</span> MExp, <span class="at">label =</span> State)) <span class="sc">+</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> Ins), <span class="at">size =</span> <span class="fl">0.8</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Yes"</span> <span class="ot">=</span> <span class="st">"darkgreen"</span>, <span class="st">"No"</span> <span class="ot">=</span> <span class="st">"red"</span>)) <span class="sc">+</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>Health, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span> </span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">scale =</span> <span class="fl">1e-3</span>)) <span class="sc">+</span></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>(<span class="at">scale =</span> <span class="fl">1e-3</span>)) <span class="sc">+</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Income (in thousands)"</span>,<span class="at">y =</span> <span class="st">"Expenditure on health (in thousands)"</span>, <span class="at">caption =</span> <span class="st">"Source: own elaboration for EDAV Final Project based on CPS-ASEC 2023."</span>) <span class="sc">+</span> </span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color =</span> <span class="st">"Insurance"</span>) <span class="sc">+</span></span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Expenditure on Health"</span>) <span class="sc">+</span> </span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>)) <span class="sc">+</span></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() </span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>p_plotly <span class="ot">&lt;-</span> plotly<span class="sc">::</span><span class="fu">ggplotly</span>(p)</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>p_plotly</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-d1fde0553d9500f18dbf" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-d1fde0553d9500f18dbf">{"x":{"data":[{"x":[20,4860,203326,71003,68162,12002,0,24540,0,57241,79127,65004,0,12820,0,65620,0,73602,6001,9000,15,0,3626,154750,0,0,0,0,0,0,79000,100000,50003,18000,67200,90012,8000,43457,170051,1681,108276,65000,0,0,24071,0,22128,93601,40000,0,60500,91753,0,0,46539,81220,118695,250320,40000,99052,0,51625,35000,20000,110020,0,0,0,0,35205,0,50010,280091,0,4350,0],"y":[0,2550,3120,180,225,20,400,2388,1000,2690,960,8500,0,10,500,600,214,3500,50,350,350,300,1850,2200,675,0,533,100,0,1525,1100,14800,100,125,2640,4700,600,700,14200,0,300,5000,85,850,400,0,1200,2075,0,50,2200,1649,500,350,25,675,5000,2800,1164,4500,100,9580,1040,590,400,19,400,135,1550,11500,0,2200,14550,300,60,200],"text":["Inc:     20<br />MExp:     0<br />State: 35<br />Ins: Yes","Inc:   4860<br />MExp:  2550<br />State: 13<br />Ins: Yes","Inc: 203326<br />MExp:  3120<br />State: 12<br />Ins: Yes","Inc:  71003<br />MExp:   180<br />State: 39<br />Ins: Yes","Inc:  68162<br />MExp:   225<br />State: 36<br />Ins: Yes","Inc:  12002<br />MExp:    20<br />State: 12<br />Ins: Yes","Inc:      0<br />MExp:   400<br />State: 44<br />Ins: Yes","Inc:  24540<br />MExp:  2388<br />State: 29<br />Ins: Yes","Inc:      0<br />MExp:  1000<br />State: 36<br />Ins: Yes","Inc:  57241<br />MExp:  2690<br />State: 17<br />Ins: Yes","Inc:  79127<br />MExp:   960<br />State: 48<br />Ins: Yes","Inc:  65004<br />MExp:  8500<br />State: 45<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 21<br />Ins: Yes","Inc:  12820<br />MExp:    10<br />State: 19<br />Ins: Yes","Inc:      0<br />MExp:   500<br />State: 36<br />Ins: Yes","Inc:  65620<br />MExp:   600<br />State: 12<br />Ins: Yes","Inc:      0<br />MExp:   214<br />State: 12<br />Ins: Yes","Inc:  73602<br />MExp:  3500<br />State: 36<br />Ins: Yes","Inc:   6001<br />MExp:    50<br />State: 26<br />Ins: Yes","Inc:   9000<br />MExp:   350<br />State:  4<br />Ins: Yes","Inc:     15<br />MExp:   350<br />State: 26<br />Ins: Yes","Inc:      0<br />MExp:   300<br />State: 12<br />Ins: Yes","Inc:   3626<br />MExp:  1850<br />State: 51<br />Ins: Yes","Inc: 154750<br />MExp:  2200<br />State: 51<br />Ins: Yes","Inc:      0<br />MExp:   675<br />State: 12<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 48<br />Ins: Yes","Inc:      0<br />MExp:   533<br />State: 17<br />Ins: Yes","Inc:      0<br />MExp:   100<br />State: 55<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 17<br />Ins: Yes","Inc:      0<br />MExp:  1525<br />State: 49<br />Ins: Yes","Inc:  79000<br />MExp:  1100<br />State: 36<br />Ins: Yes","Inc: 100000<br />MExp: 14800<br />State: 34<br />Ins: Yes","Inc:  50003<br />MExp:   100<br />State:  6<br />Ins: Yes","Inc:  18000<br />MExp:   125<br />State:  6<br />Ins: Yes","Inc:  67200<br />MExp:  2640<br />State: 12<br />Ins: Yes","Inc:  90012<br />MExp:  4700<br />State: 36<br />Ins: Yes","Inc:   8000<br />MExp:   600<br />State: 13<br />Ins: Yes","Inc:  43457<br />MExp:   700<br />State: 15<br />Ins: Yes","Inc: 170051<br />MExp: 14200<br />State: 48<br />Ins: Yes","Inc:   1681<br />MExp:     0<br />State: 41<br />Ins: Yes","Inc: 108276<br />MExp:   300<br />State: 36<br />Ins: Yes","Inc:  65000<br />MExp:  5000<br />State: 26<br />Ins: Yes","Inc:      0<br />MExp:    85<br />State: 51<br />Ins: Yes","Inc:      0<br />MExp:   850<br />State: 48<br />Ins: Yes","Inc:  24071<br />MExp:   400<br />State: 21<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 24<br />Ins: Yes","Inc:  22128<br />MExp:  1200<br />State: 12<br />Ins: Yes","Inc:  93601<br />MExp:  2075<br />State: 24<br />Ins: Yes","Inc:  40000<br />MExp:     0<br />State: 25<br />Ins: Yes","Inc:      0<br />MExp:    50<br />State: 29<br />Ins: Yes","Inc:  60500<br />MExp:  2200<br />State: 48<br />Ins: Yes","Inc:  91753<br />MExp:  1649<br />State:  5<br />Ins: Yes","Inc:      0<br />MExp:   500<br />State:  5<br />Ins: Yes","Inc:      0<br />MExp:   350<br />State: 28<br />Ins: Yes","Inc:  46539<br />MExp:    25<br />State: 36<br />Ins: Yes","Inc:  81220<br />MExp:   675<br />State: 49<br />Ins: Yes","Inc: 118695<br />MExp:  5000<br />State: 26<br />Ins: Yes","Inc: 250320<br />MExp:  2800<br />State: 36<br />Ins: Yes","Inc:  40000<br />MExp:  1164<br />State: 33<br />Ins: Yes","Inc:  99052<br />MExp:  4500<br />State:  5<br />Ins: Yes","Inc:      0<br />MExp:   100<br />State: 33<br />Ins: Yes","Inc:  51625<br />MExp:  9580<br />State:  6<br />Ins: Yes","Inc:  35000<br />MExp:  1040<br />State: 25<br />Ins: Yes","Inc:  20000<br />MExp:   590<br />State: 29<br />Ins: Yes","Inc: 110020<br />MExp:   400<br />State:  6<br />Ins: Yes","Inc:      0<br />MExp:    19<br />State: 48<br />Ins: Yes","Inc:      0<br />MExp:   400<br />State: 49<br />Ins: Yes","Inc:      0<br />MExp:   135<br />State: 48<br />Ins: Yes","Inc:      0<br />MExp:  1550<br />State: 48<br />Ins: Yes","Inc:  35205<br />MExp: 11500<br />State: 22<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 54<br />Ins: Yes","Inc:  50010<br />MExp:  2200<br />State: 13<br />Ins: Yes","Inc: 280091<br />MExp: 14550<br />State: 39<br />Ins: Yes","Inc:      0<br />MExp:   300<br />State:  1<br />Ins: Yes","Inc:   4350<br />MExp:    60<br />State:  8<br />Ins: Yes","Inc:      0<br />MExp:   200<br />State: 48<br />Ins: Yes"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,100,0,1)","opacity":0.5,"size":3.0236220472440949,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,100,0,1)"}},"hoveron":"points","name":"Yes","legendgroup":"Yes","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[53626,20103,1464,140008,15000,27005,62100,9888,160000,95003,109030,20000,0,0,120012,48004,0,93504,56525,270195,0,0,0,55000,50000,30000,0,38000,49975,76031,0,36002,95001,35953,0,13310,27500,0,33395,72014,30791,102821,0,0,0,48032,0,31501,0,33697,0,0,40010,200,0,0,19002,80350,20000,74004,98004,38001,0,0,102324,10710,115600,97285,139912,130038,0,119055,45000,0,200130,0,88320,171705,81542,30000,82458,3145,81722,13824,13640],"y":[6100,2560,225,4200,400,1750,16600,1550,9150,4150,6000,1600,100,150,50,300,60,8200,3195,2300,20,7000,25,500,2695,900,0,4100,3850,1638,0,600,9000,5608,0,6245,50,0,3700,350,3782,0,1500,0,250,100,830,150,150,675,0,200,585,6620,10,0,0,3150,800,5090,1150,100,200,200,16100,1400,25,10800,1450,0,25,600,3150,4500,1440,0,4200,6200,696,500,4250,875,13300,75,2920],"text":["Inc:  53626<br />MExp:  6100<br />State: 29<br />Ins: Yes","Inc:  20103<br />MExp:  2560<br />State: 55<br />Ins: Yes","Inc:   1464<br />MExp:   225<br />State: 45<br />Ins: Yes","Inc: 140008<br />MExp:  4200<br />State:  6<br />Ins: Yes","Inc:  15000<br />MExp:   400<br />State: 12<br />Ins: Yes","Inc:  27005<br />MExp:  1750<br />State: 13<br />Ins: Yes","Inc:  62100<br />MExp: 16600<br />State: 23<br />Ins: Yes","Inc:   9888<br />MExp:  1550<br />State: 16<br />Ins: Yes","Inc: 160000<br />MExp:  9150<br />State:  4<br />Ins: Yes","Inc:  95003<br />MExp:  4150<br />State: 37<br />Ins: Yes","Inc: 109030<br />MExp:  6000<br />State: 25<br />Ins: Yes","Inc:  20000<br />MExp:  1600<br />State: 51<br />Ins: Yes","Inc:      0<br />MExp:   100<br />State: 47<br />Ins: Yes","Inc:      0<br />MExp:   150<br />State: 36<br />Ins: Yes","Inc: 120012<br />MExp:    50<br />State: 27<br />Ins: Yes","Inc:  48004<br />MExp:   300<br />State: 42<br />Ins: Yes","Inc:      0<br />MExp:    60<br />State: 36<br />Ins: Yes","Inc:  93504<br />MExp:  8200<br />State: 21<br />Ins: Yes","Inc:  56525<br />MExp:  3195<br />State: 12<br />Ins: Yes","Inc: 270195<br />MExp:  2300<br />State:  6<br />Ins: Yes","Inc:      0<br />MExp:    20<br />State: 25<br />Ins: Yes","Inc:      0<br />MExp:  7000<br />State: 48<br />Ins: Yes","Inc:      0<br />MExp:    25<br />State: 51<br />Ins: Yes","Inc:  55000<br />MExp:   500<br />State: 20<br />Ins: Yes","Inc:  50000<br />MExp:  2695<br />State: 48<br />Ins: Yes","Inc:  30000<br />MExp:   900<br />State: 48<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State:  6<br />Ins: Yes","Inc:  38000<br />MExp:  4100<br />State: 25<br />Ins: Yes","Inc:  49975<br />MExp:  3850<br />State: 41<br />Ins: Yes","Inc:  76031<br />MExp:  1638<br />State: 45<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 42<br />Ins: Yes","Inc:  36002<br />MExp:   600<br />State: 42<br />Ins: Yes","Inc:  95001<br />MExp:  9000<br />State: 19<br />Ins: Yes","Inc:  35953<br />MExp:  5608<br />State: 53<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 48<br />Ins: Yes","Inc:  13310<br />MExp:  6245<br />State:  8<br />Ins: Yes","Inc:  27500<br />MExp:    50<br />State: 17<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 48<br />Ins: Yes","Inc:  33395<br />MExp:  3700<br />State: 21<br />Ins: Yes","Inc:  72014<br />MExp:   350<br />State: 45<br />Ins: Yes","Inc:  30791<br />MExp:  3782<br />State: 55<br />Ins: Yes","Inc: 102821<br />MExp:     0<br />State: 47<br />Ins: Yes","Inc:      0<br />MExp:  1500<br />State: 42<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 45<br />Ins: Yes","Inc:      0<br />MExp:   250<br />State: 29<br />Ins: Yes","Inc:  48032<br />MExp:   100<br />State: 36<br />Ins: Yes","Inc:      0<br />MExp:   830<br />State: 41<br />Ins: Yes","Inc:  31501<br />MExp:   150<br />State: 32<br />Ins: Yes","Inc:      0<br />MExp:   150<br />State: 39<br />Ins: Yes","Inc:  33697<br />MExp:   675<br />State: 55<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 13<br />Ins: Yes","Inc:      0<br />MExp:   200<br />State:  6<br />Ins: Yes","Inc:  40010<br />MExp:   585<br />State: 13<br />Ins: Yes","Inc:    200<br />MExp:  6620<br />State: 40<br />Ins: Yes","Inc:      0<br />MExp:    10<br />State: 18<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 22<br />Ins: Yes","Inc:  19002<br />MExp:     0<br />State: 12<br />Ins: Yes","Inc:  80350<br />MExp:  3150<br />State: 11<br />Ins: Yes","Inc:  20000<br />MExp:   800<br />State: 24<br />Ins: Yes","Inc:  74004<br />MExp:  5090<br />State: 25<br />Ins: Yes","Inc:  98004<br />MExp:  1150<br />State:  6<br />Ins: Yes","Inc:  38001<br />MExp:   100<br />State:  6<br />Ins: Yes","Inc:      0<br />MExp:   200<br />State: 48<br />Ins: Yes","Inc:      0<br />MExp:   200<br />State: 32<br />Ins: Yes","Inc: 102324<br />MExp: 16100<br />State: 45<br />Ins: Yes","Inc:  10710<br />MExp:  1400<br />State: 18<br />Ins: Yes","Inc: 115600<br />MExp:    25<br />State: 26<br />Ins: Yes","Inc:  97285<br />MExp: 10800<br />State: 25<br />Ins: Yes","Inc: 139912<br />MExp:  1450<br />State: 51<br />Ins: Yes","Inc: 130038<br />MExp:     0<br />State: 27<br />Ins: Yes","Inc:      0<br />MExp:    25<br />State: 13<br />Ins: Yes","Inc: 119055<br />MExp:   600<br />State: 31<br />Ins: Yes","Inc:  45000<br />MExp:  3150<br />State: 13<br />Ins: Yes","Inc:      0<br />MExp:  4500<br />State: 34<br />Ins: Yes","Inc: 200130<br />MExp:  1440<br />State:  6<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 12<br />Ins: Yes","Inc:  88320<br />MExp:  4200<br />State: 54<br />Ins: Yes","Inc: 171705<br />MExp:  6200<br />State:  6<br />Ins: Yes","Inc:  81542<br />MExp:   696<br />State: 39<br />Ins: Yes","Inc:  30000<br />MExp:   500<br />State: 51<br />Ins: Yes","Inc:  82458<br />MExp:  4250<br />State: 28<br />Ins: Yes","Inc:   3145<br />MExp:   875<br />State: 20<br />Ins: Yes","Inc:  81722<br />MExp: 13300<br />State: 32<br />Ins: Yes","Inc:  13824<br />MExp:    75<br />State: 17<br />Ins: Yes","Inc:  13640<br />MExp:  2920<br />State: 36<br />Ins: Yes"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,100,0,1)","opacity":0.5,"size":3.0236220472440949,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,100,0,1)"}},"hoveron":"points","name":"Yes","legendgroup":"Yes","showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[0,0,26030,15030,200001,61280,0,78000,22000,0,39201,0,2049,0,0,55000,0,19137,60318,0,33845,15241,74478,43000,2,52732,25801,117300,92610,100000,0,13092,35000,80000,440022,0,19450,34800,175002,98434,18168,87160,0,0,42368,41000,42100,40005,50010,50001,40000,19321,16649,160200,0,27978,24000,1,40280,25081,0,19571,105509,68010,14676,24386,36900,24815,53664,0,62183,3,48001,50044,0,35100,0],"y":[0,0,1600,400,260,4700,100,150,700,25,3700,300,0,0,0,6100,300,350,502,0,5494,50,2970,150,150,150,344,6660,12120,5600,250,1500,20,7100,4700,100,300,7200,3000,1464,50,3714,0,3100,205,300,2000,225,100,0,74,1733,5300,250,30,125,1100,75,1150,0,0,3550,5700,500,0,185,30,7788,1150,0,2500,100,4900,600,300,675,700],"text":["Inc:      0<br />MExp:     0<br />State: 18<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 17<br />Ins: Yes","Inc:  26030<br />MExp:  1600<br />State: 20<br />Ins: Yes","Inc:  15030<br />MExp:   400<br />State:  6<br />Ins: Yes","Inc: 200001<br />MExp:   260<br />State:  6<br />Ins: Yes","Inc:  61280<br />MExp:  4700<br />State: 51<br />Ins: Yes","Inc:      0<br />MExp:   100<br />State: 48<br />Ins: Yes","Inc:  78000<br />MExp:   150<br />State: 27<br />Ins: Yes","Inc:  22000<br />MExp:   700<br />State: 55<br />Ins: Yes","Inc:      0<br />MExp:    25<br />State: 15<br />Ins: Yes","Inc:  39201<br />MExp:  3700<br />State: 51<br />Ins: Yes","Inc:      0<br />MExp:   300<br />State:  6<br />Ins: Yes","Inc:   2049<br />MExp:     0<br />State: 37<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 48<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 36<br />Ins: Yes","Inc:  55000<br />MExp:  6100<br />State: 42<br />Ins: Yes","Inc:      0<br />MExp:   300<br />State:  6<br />Ins: Yes","Inc:  19137<br />MExp:   350<br />State:  6<br />Ins: Yes","Inc:  60318<br />MExp:   502<br />State:  6<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 48<br />Ins: Yes","Inc:  33845<br />MExp:  5494<br />State: 33<br />Ins: Yes","Inc:  15241<br />MExp:    50<br />State: 47<br />Ins: Yes","Inc:  74478<br />MExp:  2970<br />State: 18<br />Ins: Yes","Inc:  43000<br />MExp:   150<br />State: 34<br />Ins: Yes","Inc:      2<br />MExp:   150<br />State: 12<br />Ins: Yes","Inc:  52732<br />MExp:   150<br />State:  8<br />Ins: Yes","Inc:  25801<br />MExp:   344<br />State: 27<br />Ins: Yes","Inc: 117300<br />MExp:  6660<br />State:  6<br />Ins: Yes","Inc:  92610<br />MExp: 12120<br />State:  6<br />Ins: Yes","Inc: 100000<br />MExp:  5600<br />State: 13<br />Ins: Yes","Inc:      0<br />MExp:   250<br />State: 48<br />Ins: Yes","Inc:  13092<br />MExp:  1500<br />State:  4<br />Ins: Yes","Inc:  35000<br />MExp:    20<br />State: 13<br />Ins: Yes","Inc:  80000<br />MExp:  7100<br />State:  1<br />Ins: Yes","Inc: 440022<br />MExp:  4700<br />State: 24<br />Ins: Yes","Inc:      0<br />MExp:   100<br />State: 45<br />Ins: Yes","Inc:  19450<br />MExp:   300<br />State: 39<br />Ins: Yes","Inc:  34800<br />MExp:  7200<br />State: 41<br />Ins: Yes","Inc: 175002<br />MExp:  3000<br />State: 29<br />Ins: Yes","Inc:  98434<br />MExp:  1464<br />State: 27<br />Ins: Yes","Inc:  18168<br />MExp:    50<br />State: 48<br />Ins: Yes","Inc:  87160<br />MExp:  3714<br />State: 17<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 18<br />Ins: Yes","Inc:      0<br />MExp:  3100<br />State: 28<br />Ins: Yes","Inc:  42368<br />MExp:   205<br />State: 28<br />Ins: Yes","Inc:  41000<br />MExp:   300<br />State: 53<br />Ins: Yes","Inc:  42100<br />MExp:  2000<br />State: 51<br />Ins: Yes","Inc:  40005<br />MExp:   225<br />State:  6<br />Ins: Yes","Inc:  50010<br />MExp:   100<br />State: 15<br />Ins: Yes","Inc:  50001<br />MExp:     0<br />State: 37<br />Ins: Yes","Inc:  40000<br />MExp:    74<br />State:  1<br />Ins: Yes","Inc:  19321<br />MExp:  1733<br />State: 26<br />Ins: Yes","Inc:  16649<br />MExp:  5300<br />State: 45<br />Ins: Yes","Inc: 160200<br />MExp:   250<br />State: 48<br />Ins: Yes","Inc:      0<br />MExp:    30<br />State: 25<br />Ins: Yes","Inc:  27978<br />MExp:   125<br />State:  6<br />Ins: Yes","Inc:  24000<br />MExp:  1100<br />State: 12<br />Ins: Yes","Inc:      1<br />MExp:    75<br />State: 17<br />Ins: Yes","Inc:  40280<br />MExp:  1150<br />State: 36<br />Ins: Yes","Inc:  25081<br />MExp:     0<br />State: 40<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State: 48<br />Ins: Yes","Inc:  19571<br />MExp:  3550<br />State: 12<br />Ins: Yes","Inc: 105509<br />MExp:  5700<br />State: 22<br />Ins: Yes","Inc:  68010<br />MExp:   500<br />State: 34<br />Ins: Yes","Inc:  14676<br />MExp:     0<br />State: 40<br />Ins: Yes","Inc:  24386<br />MExp:   185<br />State: 25<br />Ins: Yes","Inc:  36900<br />MExp:    30<br />State: 21<br />Ins: Yes","Inc:  24815<br />MExp:  7788<br />State: 42<br />Ins: Yes","Inc:  53664<br />MExp:  1150<br />State: 37<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State:  6<br />Ins: Yes","Inc:  62183<br />MExp:  2500<br />State: 42<br />Ins: Yes","Inc:      3<br />MExp:   100<br />State: 48<br />Ins: Yes","Inc:  48001<br />MExp:  4900<br />State: 25<br />Ins: Yes","Inc:  50044<br />MExp:   600<br />State: 26<br />Ins: Yes","Inc:      0<br />MExp:   300<br />State: 42<br />Ins: Yes","Inc:  35100<br />MExp:   675<br />State: 48<br />Ins: Yes","Inc:      0<br />MExp:   700<br />State: 12<br />Ins: Yes"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,100,0,1)","opacity":0.5,"size":3.0236220472440949,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,100,0,1)"}},"hoveron":"points","name":"Yes","legendgroup":"Yes","showlegend":false,"xaxis":"x3","yaxis":"y3","hoverinfo":"text","frame":null},{"x":[14820,26051,80016,12000,31985,0,52082,51616,3121,67982,40865,109733,40103,117000,7981,85598,24010,17401,3020,124551,63303,15799,65050,71600,28423,63000,30780,1800,18129,108572],"y":[300,750,500,0,600,0,3450,2700,750,2230,1800,5220,1500,6100,3600,3060,1880,5500,0,11170,9000,36,2950,3300,550,2268,1276,2500,102,2747],"text":["Inc:  14820<br />MExp:   300<br />State: 47<br />Ins: Yes","Inc:  26051<br />MExp:   750<br />State: 36<br />Ins: Yes","Inc:  80016<br />MExp:   500<br />State: 36<br />Ins: Yes","Inc:  12000<br />MExp:     0<br />State: 44<br />Ins: Yes","Inc:  31985<br />MExp:   600<br />State: 26<br />Ins: Yes","Inc:      0<br />MExp:     0<br />State:  6<br />Ins: Yes","Inc:  52082<br />MExp:  3450<br />State: 26<br />Ins: Yes","Inc:  51616<br />MExp:  2700<br />State: 12<br />Ins: Yes","Inc:   3121<br />MExp:   750<br />State: 42<br />Ins: Yes","Inc:  67982<br />MExp:  2230<br />State: 29<br />Ins: Yes","Inc:  40865<br />MExp:  1800<br />State: 17<br />Ins: Yes","Inc: 109733<br />MExp:  5220<br />State:  6<br />Ins: Yes","Inc:  40103<br />MExp:  1500<br />State: 24<br />Ins: Yes","Inc: 117000<br />MExp:  6100<br />State:  6<br />Ins: Yes","Inc:   7981<br />MExp:  3600<br />State: 34<br />Ins: Yes","Inc:  85598<br />MExp:  3060<br />State: 48<br />Ins: Yes","Inc:  24010<br />MExp:  1880<br />State: 12<br />Ins: Yes","Inc:  17401<br />MExp:  5500<br />State: 13<br />Ins: Yes","Inc:   3020<br />MExp:     0<br />State:  6<br />Ins: Yes","Inc: 124551<br />MExp: 11170<br />State: 24<br />Ins: Yes","Inc:  63303<br />MExp:  9000<br />State: 34<br />Ins: Yes","Inc:  15799<br />MExp:    36<br />State: 42<br />Ins: Yes","Inc:  65050<br />MExp:  2950<br />State:  6<br />Ins: Yes","Inc:  71600<br />MExp:  3300<br />State: 44<br />Ins: Yes","Inc:  28423<br />MExp:   550<br />State: 55<br />Ins: Yes","Inc:  63000<br />MExp:  2268<br />State: 28<br />Ins: Yes","Inc:  30780<br />MExp:  1276<br />State:  5<br />Ins: Yes","Inc:   1800<br />MExp:  2500<br />State: 18<br />Ins: Yes","Inc:  18129<br />MExp:   102<br />State: 42<br />Ins: Yes","Inc: 108572<br />MExp:  2747<br />State:  5<br />Ins: Yes"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,100,0,1)","opacity":0.5,"size":3.0236220472440949,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,100,0,1)"}},"hoveron":"points","name":"Yes","legendgroup":"Yes","showlegend":false,"xaxis":"x4","yaxis":"y4","hoverinfo":"text","frame":null},{"x":[33664,19200,0,92512,51061,18000],"y":[3550,125,100,5075,2205,620],"text":["Inc:  33664<br />MExp:  3550<br />State: 26<br />Ins: Yes","Inc:  19200<br />MExp:   125<br />State: 29<br />Ins: Yes","Inc:      0<br />MExp:   100<br />State: 12<br />Ins: Yes","Inc:  92512<br />MExp:  5075<br />State: 26<br />Ins: Yes","Inc:  51061<br />MExp:  2205<br />State: 48<br />Ins: Yes","Inc:  18000<br />MExp:   620<br />State: 17<br />Ins: Yes"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(0,100,0,1)","opacity":0.5,"size":3.0236220472440949,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(0,100,0,1)"}},"hoveron":"points","name":"Yes","legendgroup":"Yes","showlegend":false,"xaxis":"x5","yaxis":"y5","hoverinfo":"text","frame":null},{"x":[40004,15031],"y":[75,700],"text":["Inc:  40004<br />MExp:    75<br />State: 17<br />Ins: No","Inc:  15031<br />MExp:   700<br />State: 36<br />Ins: No"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,0,0,1)","opacity":0.5,"size":3.0236220472440949,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(255,0,0,1)"}},"hoveron":"points","name":"No","legendgroup":"No","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[40000,0,50000,0,76101,19200,29923,30000,28000,0,72000,0,60000,0,48000],"y":[200,100,0,0,100,0,60,200,500,0,0,100,10000,25,200],"text":["Inc:  40000<br />MExp:   200<br />State:  6<br />Ins: No","Inc:      0<br />MExp:   100<br />State:  6<br />Ins: No","Inc:  50000<br />MExp:     0<br />State: 35<br />Ins: No","Inc:      0<br />MExp:     0<br />State: 48<br />Ins: No","Inc:  76101<br />MExp:   100<br />State: 36<br />Ins: No","Inc:  19200<br />MExp:     0<br />State: 48<br />Ins: No","Inc:  29923<br />MExp:    60<br />State:  6<br />Ins: No","Inc:  30000<br />MExp:   200<br />State:  6<br />Ins: No","Inc:  28000<br />MExp:   500<br />State: 24<br />Ins: No","Inc:      0<br />MExp:     0<br />State: 25<br />Ins: No","Inc:  72000<br />MExp:     0<br />State: 26<br />Ins: No","Inc:      0<br />MExp:   100<br />State: 49<br />Ins: No","Inc:  60000<br />MExp: 10000<br />State: 48<br />Ins: No","Inc:      0<br />MExp:    25<br />State: 48<br />Ins: No","Inc:  48000<br />MExp:   200<br />State: 36<br />Ins: No"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,0,0,1)","opacity":0.5,"size":3.0236220472440949,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(255,0,0,1)"}},"hoveron":"points","name":"No","legendgroup":"No","showlegend":false,"xaxis":"x2","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[67740,9005,40000,0],"y":[100,600,0,1000],"text":["Inc:  67740<br />MExp:   100<br />State: 36<br />Ins: No","Inc:   9005<br />MExp:   600<br />State: 29<br />Ins: No","Inc:  40000<br />MExp:     0<br />State: 19<br />Ins: No","Inc:      0<br />MExp:  1000<br />State: 51<br />Ins: No"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,0,0,1)","opacity":0.5,"size":3.0236220472440949,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(255,0,0,1)"}},"hoveron":"points","name":"No","legendgroup":"No","showlegend":false,"xaxis":"x3","yaxis":"y3","hoverinfo":"text","frame":null},{"x":[25000,19200,18512,46001,0],"y":[2350,8000,150,4234,1700],"text":["Inc:  25000<br />MExp:  2350<br />State: 12<br />Ins: No","Inc:  19200<br />MExp:  8000<br />State: 17<br />Ins: No","Inc:  18512<br />MExp:   150<br />State: 48<br />Ins: No","Inc:  46001<br />MExp:  4234<br />State: 34<br />Ins: No","Inc:      0<br />MExp:  1700<br />State:  4<br />Ins: No"],"type":"scatter","mode":"markers","marker":{"autocolorscale":false,"color":"rgba(255,0,0,1)","opacity":0.5,"size":3.0236220472440949,"symbol":"circle","line":{"width":1.8897637795275593,"color":"rgba(255,0,0,1)"}},"hoveron":"points","name":"No","legendgroup":"No","showlegend":false,"xaxis":"x4","yaxis":"y4","hoverinfo":"text","frame":null}],"layout":{"margin":{"t":55.452054794520549,"r":7.3059360730593621,"b":40.182648401826491,"l":37.260273972602747},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Expenditure on Health","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,0.31621004566210043],"automargin":true,"type":"linear","autorange":false,"range":[-14004.550000000001,294095.54999999999],"tickmode":"array","ticktext":["0","100","200"],"tickvals":[0,100000,200000],"categoryorder":"array","categoryarray":["0","100","200"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":"","hoverformat":".2f"},"annotations":[{"text":"Income (in thousands)","x":0.5,"y":0,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"top","annotationType":"axis","yshift":-21.917808219178088},{"text":"Expenditure on health (in thousands)","x":0,"y":0.5,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"xref":"paper","yref":"paper","textangle":-90,"xanchor":"right","yanchor":"center","annotationType":"axis","xshift":-21.917808219178081},{"text":"Excellent","x":0.15810502283105021,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Very good","x":0.5,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Good","x":0.84189497716894968,"y":1,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Fair","x":0.15810502283105021,"y":0.47602739726027399,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"},{"text":"Poor","x":0.5,"y":0.47602739726027399,"showarrow":false,"ax":0,"ay":0,"font":{"color":"rgba(26,26,26,1)","family":"","size":11.68949771689498},"xref":"paper","yref":"paper","textangle":-0,"xanchor":"center","yanchor":"bottom"}],"yaxis":{"domain":[0.52397260273972601,1],"automargin":true,"type":"linear","autorange":false,"range":[-740,15540],"tickmode":"array","ticktext":["0","5","10","15"],"tickvals":[0,5000,10000,15000],"categoryorder":"array","categoryarray":["0","5","10","15"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":"","hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.31621004566210043,"y0":0.52397260273972601,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.31621004566210043,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.3504566210045662,"x1":0.6495433789954338,"y0":0.52397260273972601,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.3504566210045662,"x1":0.6495433789954338,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.68378995433789946,"x1":1,"y0":0.52397260273972601,"y1":1},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.68378995433789946,"x1":1,"y0":0,"y1":23.37899543378996,"yanchor":1,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.31621004566210043,"y0":0,"y1":0.47602739726027399},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":0.31621004566210043,"y0":0,"y1":23.37899543378996,"yanchor":0.47602739726027399,"ysizemode":"pixel"},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.3504566210045662,"x1":0.6495433789954338,"y0":0,"y1":0.47602739726027399},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0.3504566210045662,"x1":0.6495433789954338,"y0":0,"y1":23.37899543378996,"yanchor":0.47602739726027399,"ysizemode":"pixel"}],"xaxis2":{"type":"linear","autorange":false,"range":[-13509.75,283704.75],"tickmode":"array","ticktext":["0","100","200"],"tickvals":[0,100000,200000],"categoryorder":"array","categoryarray":["0","100","200"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.3504566210045662,0.6495433789954338],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y2","title":"","hoverformat":".2f"},"yaxis2":{"type":"linear","autorange":false,"range":[-830,17430],"tickmode":"array","ticktext":["0","5","10","15"],"tickvals":[0,4999.9999999999991,10000,15000],"categoryorder":"array","categoryarray":["0","5","10","15"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.52397260273972601,1],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x2","title":"","hoverformat":".2f"},"xaxis3":{"type":"linear","autorange":false,"range":[-22001.100000000002,462023.09999999998],"tickmode":"array","ticktext":["0","100","200","300","400"],"tickvals":[0,100000.00000000001,200000,300000,400000],"categoryorder":"array","categoryarray":["0","100","200","300","400"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.68378995433789946,1],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y3","title":"","hoverformat":".2f"},"yaxis3":{"type":"linear","autorange":false,"range":[-606,12726],"tickmode":"array","ticktext":["0.0","2.5","5.0","7.5","10.0","12.5"],"tickvals":[0,2500,5000,7499.9999999999991,10000,12500],"categoryorder":"array","categoryarray":["0.0","2.5","5.0","7.5","10.0","12.5"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.52397260273972601,1],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x3","title":"","hoverformat":".2f"},"xaxis4":{"type":"linear","autorange":false,"range":[-6227.5500000000002,130778.55],"tickmode":"array","ticktext":["0","40","80","120"],"tickvals":[0,40000,80000,120000.00000000001],"categoryorder":"array","categoryarray":["0","40","80","120"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0,0.31621004566210043],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y4","title":"","hoverformat":".2f"},"yaxis4":{"type":"linear","autorange":false,"range":[-558.5,11728.5],"tickmode":"array","ticktext":["0","3","6","9"],"tickvals":[0,3000,5999.9999999999991,9000],"categoryorder":"array","categoryarray":["0","3","6","9"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0,0.47602739726027399],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x4","title":"","hoverformat":".2f"},"xaxis5":{"type":"linear","autorange":false,"range":[-4625.6000000000004,97137.600000000006],"tickmode":"array","ticktext":["0","25","50","75"],"tickvals":[0,25000,49999.999999999993,75000],"categoryorder":"array","categoryarray":["0","25","50","75"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0.3504566210045662,0.6495433789954338],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y5","title":"","hoverformat":".2f"},"yaxis5":{"type":"linear","autorange":false,"range":[-148.75,5323.75],"tickmode":"array","ticktext":["0","1","2","3","4","5"],"tickvals":[0,1000,2000,3000,4000,5000],"categoryorder":"array","categoryarray":["0","1","2","3","4","5"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"domain":[0,0.47602739726027399],"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x5","title":"","hoverformat":".2f"},"showlegend":true,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"Insurance","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"3edc38741e69":{"x":{},"y":{},"label":{},"colour":{},"type":"scatter"}},"cur_data":"3edc38741e69","visdat":{"3edc38741e69":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<p>=======</p>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("sf")</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("tmap")</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'sf' was built under R version 4.3.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Linking to GEOS 3.11.2, GDAL 3.7.2, PROJ 9.3.0; sf_use_s2() is TRUE</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tmap)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tmap' was built under R version 4.3.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Breaking News: tmap 3.x is retiring. Please test v4, e.g. with
+remotes::install_github('r-tmap/tmap')</code></pre>
+</div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">#shapefile &lt;- st_read("../tl_rd22_us_county/tl_rd22_us_county.shp")</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co">#shapefile$shelf &lt;- "Shelf"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co">#tm_shape(shapefile) +</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a> <span class="co"># tm_polygons(col = "grey10")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<blockquote class="blockquote">
+<blockquote class="blockquote">
+<blockquote class="blockquote">
+<blockquote class="blockquote">
+<blockquote class="blockquote">
+<blockquote class="blockquote">
+<blockquote class="blockquote">
+<p>bf2397e87dd1b7dc9783c078a40a93c146654179</p>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
+</blockquote>
 
 
 </section>
