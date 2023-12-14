@@ -1,31 +1,28 @@
 # Interactive graph
-```{r}
-
-library(cpsR)
-library(tidyverse)
-library(ggplot2)
-library(DataExplorer)
-library(data.table)
-
-df <- get_asec(year = 2023, vars = c("PERIDNUM", "A_FNLWGT", "GESTFIPS", "GTCO", "HEA", "A_AGE", "A_SEX", "PRCITSHP","PRDTRACE", "PEMLR","A_HGA","PEARNVAL","DIS_HP","NOW_COV", "MOOP", "PTOTVAL"), key="033d6fdb469d970444d91cda781be61fa0d46099", tibble = FALSE)
-write.csv(df, 'df.csv')
-```
 
 <style>
   * {
     font-family: sans-serif;
   }
-</style> 
-
+</style>
 <div id="plot">
-</div>
-
+<svg id="mosaic">
+</svg></div>
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 <script src="scripts/myscript.js"></script>
-
 <script>
-d3.csv('d3.csv').then(function(data) {
-  d3.mosaicPlot(data, {id: 'plot'});
+d3.csv('data/df.csv').then(function(data) {
+  for(i = 1; i < data.columns.length; i++) {
+    let new_div = d3.select('#plot').data(data.columns).append('div')
+    new_div.append('input')
+      .attr('type', 'checkbox')
+      .attr('id', data.columns[i])
+      .attr('onchange', 'loadGraphs(this.value)')
+      .attr('name', data.columns[i])
+    new_div.append('label')
+      .attr('for', data.columns[i])
+      .text(data.columns[i])
+  }
 });
 </script>
 
