@@ -1,4 +1,15 @@
 # Interactive graph
+```{r}
+
+library(cpsR)
+library(tidyverse)
+library(ggplot2)
+library(DataExplorer)
+library(data.table)
+
+df <- get_asec(year = 2023, vars = c("PERIDNUM", "A_FNLWGT", "GESTFIPS", "GTCO", "HEA", "A_AGE", "A_SEX", "PRCITSHP","PRDTRACE", "PEMLR","A_HGA","PEARNVAL","DIS_HP","NOW_COV", "MOOP", "PTOTVAL"), key="033d6fdb469d970444d91cda781be61fa0d46099", tibble = FALSE)
+write.csv(df, 'df.csv')
+```
 
 <style>
   * {
@@ -11,3 +22,10 @@
 
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 <script src="scripts/myscript.js"></script>
+
+<script>
+d3.csv('d3.csv').then(function(data) {
+  d3.mosaicPlot(data, {id: 'plot'});
+});
+</script>
+
