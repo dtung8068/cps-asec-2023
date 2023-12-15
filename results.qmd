@@ -326,6 +326,42 @@ Also, we see that people who enjoy a better state of health tend to be richer an
 
 Regarding the insurance coverage, we see that most people in the U.S. have insurance coverage, regardless of their health status.
 
+## A deeper analysis through an Interactive Parallel Coordinates Plot
+
+Out dataset contains three continuous variables: Inc (income), Earn (earnings) and MExp (medical expenditures). In the following graph we draw an Interactive Parallel Coordinates Plot using these three variables and adding the categorical variables State and Health.
+
+```{r}
+df_6 <- df %>% 
+  filter(Age >=18) %>%
+  select(State,Health,Inc,Earn,MExp,Wt)
+
+df_6$Health <- factor(df_6$Health, levels = c("Excellent", "Very good", "Good", "Fair", "Poor"), labels = c("5-Excellent", "4-Very good", "3-Good", "2-Fair", "1-Poor"))
+  
+set.seed(3203)
+samp_idx <- sample(seq_len(nrow(df_6)), size=150, prob=df_6$Wt)
+new_data <- df_6[samp_idx, ]
+
+new_data %>% 
+  select(-Wt) %>% 
+  parcoords(rownames = F,
+            brushMode = "1d-multi",
+            color = list(colorBy = "Health",
+                         colorScale = "scaleOrdinal",
+                         colorScheme = "schemeCategory10"),
+            alpha = 0.5,
+            withD3 = TRUE,
+            width = 770,
+            height = 600)
+```
+
+We have chosen a sample of 150 individuals, taking into account the weight of each observation in the entire population. We subset the sample to include only people aged 18 years or older.
+
+We have added the variable Health so that we can interactively see how the plot changes when we select only a certain health status. Unfortunately, it is not possible for this graph to choose the color assigned to each category.
+
+In the previous graph we can see that if we select the individuals who enjoy an excellent or very good state of health they usually have a higher income, higher earnings and they spend a higher amount on medical expenses (probably because they acquire better insurance coverage) than people who suffer a poor or fair state of health.
+
+We can also see on the graph that the lines crossing from column "Inc" (income) to column "Earn" (Earnings) show that in general higher incomes are associated with higher earnings. Similarly, the lines crossing from earnings to medical expenditure also suggest a positive correlation (i.e., greater the earnings, greater the money spent on health-related issues).
+
 ## How Health Status differs across States?
 
 In this section we study how the distribution of health status changes across states. It will allow us to identify those states that face the biggest challenges in terms of health.
