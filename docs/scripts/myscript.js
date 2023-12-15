@@ -25,7 +25,7 @@ function adjustRow(svg, item) {
   .domain(arr)
   .range([340, 0])
 
-  d3.csv('https://raw.githubusercontent.com/dtung8068/cps-asec-2023/main/docs/df.csv', rowConverter).then(function(data) {
+  d3.csv('https://raw.githubusercontent.com/dtung8068/cps-asec-2023/main/df.csv', rowConverter).then(function(data) {
     let groups = d3.groups(data, d => d.Health)
     for(let i = 0; i < groups.length; i++) {
 
