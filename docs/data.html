@@ -206,19 +206,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="technical-description" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="technical-description"><span class="header-section-number">2.1</span> Technical Description</h2>
 <p>To analyze health status of people living in the United States and its relations with other social, cultural and economic dimensions we use the Annual Social and Economic Supplement to the Current Population Survey (CPS-ASEC from now on). This data is collected annually -mainly during March- by the U.S. Census Bureau and includes information of more than 75,000 households. It is worth noting that the dataset contains information for every member of each of the participating households.</p>
-<p>The data is available on the <a href="https://www.census.gov/data/datasets/time-series/demo/cps/cps-asec.html">U.S. Census Bureau’s official website</a> in both SAS and CSV format. As it is documentated in the official <a href="https://www2.census.gov/programs-surveys/cps/datasets/2023/march/asec2023_ddl_pub_full.pdf">Data Dictionary</a>, the variables may refer to three different record types: Household, Family or Person. For this project, we work with a subset of the ‘Person Type’ variables. Furthermore, as we also want to use georeferencing data, we incorporate the two ‘Household Type’ variables that point the state and county of every observation.</p>
+<p>The data is available on the <a href="https://www.census.gov/data/datasets/time-series/demo/cps/cps-asec.html">U.S. Census Bureau’s official website</a> in both SAS and CSV format. As it is documentated on the official <a href="https://www2.census.gov/programs-surveys/cps/datasets/2023/march/asec2023_ddl_pub_full.pdf">Data Dictionary</a>, the variables may refer to three different record types: Household, Family or Person. For this project, we work with a subset of the ‘Person Type’ variables. Furthermore, as we also want to use georeferencing data, we incorporate a ‘Household Type’ variable that points the state of every observation.</p>
 <p>There is an available package in R called ‘cpsR’ <a href="https://cran.r-project.org/web/packages/cpsR/index.html">see documentation here</a> to import the data. Particularly, there is a function called ‘get_asec’ to load the data. However, to get the data, we first needed to request a key for the Census API through <a href="https://api.census.gov/data/key_signup.html">this official website</a>. We’ll work with the most updated information so far: the 2023 CPS-ASEC dataset.</p>
 <p>The 2023 CPS-ASEC dataset contains information of 146,133 individuals. Each row refers to a unique individual, identified with the variable ‘PERIDNUM’ (22-digit Unique Person identifier). Since the database is a sample, and logically does not cover the entire population, there is a variable ‘A_FNLWGT’ that contains the weight associated with each observation. It is important to take this variable into account so that the statistics and graphs are a fair representation of the overall US population.</p>
-<p>There are in total 829 ‘Person Type’ variables in the dataset that cover a huge number of characteristics. For this project, since we are interested in health status and how it relates to specific social, cultural, and economic dimensions we have selected a subset of 10 ‘Person Type’ variables -additionally to the identifier and weight columns-.</p>
-<p>Our main variable is ‘HEA’ that refers to the health status of the person. This is a categorical variable that takes five possible values: 1 (that accounts for ‘Excellent’), 2 (‘Very good’), 3 (‘Good’), 4 (‘Fair’) or 5 (‘Poor’). We have also chosen two additional variables related to health: ‘DIS_HP’ and ‘NOW_COV’: the former indicates if the person has a health problem or a disability that prevents them from working and the latter indicates if the interviewed is currently covered by health insurance coverage. It is worth noting that ‘dis_hp’ is only available for persons aged at least 15. In addition to these 3 variables related to health, we will also work with 7 other dimensions to better understand how health relates with other metrics. These additional variables are ‘A_AGE’ (that refers to the age of the person), ‘A_SEX’ (sex), ‘PRDTRACE’ (race), ‘PEMLR’ (employment status), ‘A_HGA’ (educational attainment), ‘PRCITSHP’ (citizenship) and ‘PEARNVAL’ (earnings). Finally, as we have mentioned, we include two ‘Household Type’ variables: ‘GESTFIPS’ and ‘GTCO’ that refer respectively to the state and county in which each person is located. Regarding this point, one issue with the data is that it only covers a subset of about 1300 of the 3100 counties in the United States.</p>
+<p>There are in total 829 ‘Person Type’ variables in the dataset that cover a huge number of characteristics. For this project, since we are interested in health status and how it relates to specific social, cultural, and economic dimensions we have selected a subset of 12 ‘Person Type’ variables -additionally to the identifier and weight columns-.</p>
+<p>Our main variable is ‘HEA’ that refers to the health status of the person. This is a categorical variable that takes five possible values: 1 (that accounts for ‘Excellent’), 2 (‘Very good’), 3 (‘Good’), 4 (‘Fair’) or 5 (‘Poor’). We have also chosen two additional variables related to health: ‘DIS_HP’ and ‘NOW_COV’: the former indicates if the person has a health problem or a disability that prevents them from working and the latter indicates if the interviewed is currently covered by health insurance coverage. It is worth noting that ‘dis_hp’ is only available for persons aged at least 15. In addition to these 3 variables related to health, we will also work with 9 other dimensions to better understand how health relates with other metrics. These additional variables are ‘A_AGE’ (that refers to the age of the person), ‘A_SEX’ (sex), ‘PRDTRACE’ (race), ‘PEMLR’ (employment status), ‘A_HGA’ (educational attainment), ‘PRCITSHP’ (citizenship), ‘MOOP’(medical expenditure), ‘PTOTVAL’ (income) and ‘PEARNVAL’ (earnings). Finally, as we have mentioned, we include a ‘Household Type’ variable: ‘GESTFIPS’ that refers to the state in which each person is located. Regarding this point, one issue with the data is that it only covers a subset of about 1300 of the 3100 counties in the United States.</p>
 </section>
 <section id="research-plan" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="research-plan"><span class="header-section-number">2.2</span> Research Plan</h2>
 <p>The main focus of the project is to understand the current health status of the US population. To assess it, we will analyze the variable ‘HEA’ from the Annual Social and Economic Supplement to the Current Population Survey that indicates the perception of the self state of health of each interviewed individual. It is worth noting that it is not an objective metric, but rather a subjective one. We will be considering this variable as a proxy of their actual state of health.</p>
-<p>In addition, we are interested not only in health status, but also in its relation to other dimensions. For instance, as we pointed out in the Introduction, we wonder whether richer people are healthier -or not- than poorer ones. To understand this relationship, we will study how variables ‘HEA’ (health status) and ‘PEARNVAL’ (earnings) interact with each other. Although we will not analyze cause-effect relationships, we will study if these two dimensions are positively or negatively correlated - or maybe they are not related at all-. From an economic point of view, we should expect a positive relationship since, for example, higher earnings translate into a greater purchasing power to purchase better insurance coverage. However, there may be other factors that mediate this relation. Besides, as ‘HEA’ is a subjective measure, it could be the case that wealthier people compare their health status to the one of other wealthy people (rather than to the average population) and therefore we may not find a positive relation between economic status and health. To better understand this connection, we will also use the variables ‘DIS_HP’ and ‘NOW_COV’ that measure, respectively, if the person has a disability which prevents work, and if the person has currently health insurance coverage.</p>
+<p>In addition, we are interested not only in health status, but also in its relation to other dimensions. For instance, as we pointed out in the Introduction, we wonder whether richer people are healthier -or not- than poorer ones. To understand this relationship, we will study how variables ‘HEA’ (health status) and ‘PEARNVAL’ (earnings) and ‘PTOTVAL’ (income) interact with each other. Although we will not analyze cause-effect relationships, we will study if these dimensions are positively or negatively correlated - or maybe they are not related at all-. From an economic point of view, we should expect a positive relationship since, for example, higher earnings translate into a greater purchasing power to purchase better insurance coverage. However, there may be other factors that mediate this relation. Besides, as ‘HEA’ is a subjective measure, it could be the case that wealthier people compare their health status to the one of other wealthy people (rather than to the average population) and therefore we may not find a positive relation between economic status and health. To better understand this connection, we will also use the variables ‘DIS_HP’ and ‘NOW_COV’ that measure, respectively, if the person has a disability which prevents work, and if the person has currently health insurance coverage.</p>
 <p>In a similar way, we are concerning about how employment status relates with health. It is reasonable to believe that employed people enjoy better general health. Indeed, we expect them to have more money and therefore spend more money on health treatments. Nevertheless, it could also be possible that employed people felt more stressed during the day of the interview, and their responses could underestimate their actual health status. We will deepen on this relationship analyzing the variables ‘HEA’ (health status) and ‘PEMLR’ (employment status).</p>
 <p>Another research question is how the health of native-born or naturalized US citizens relates to that of non-US citizens that live in the US, and how this relation changes with age. To answer this question we will analyze the joint relationship between the variables ‘HEA’ (health status), ‘PRCITSHP’ (citizenship) and ‘A_AGE’ (age). This relationship can take different directions. For instance, it could be the case that nowadays there is no difference in health for young people between US citizens and non-US citizens. However, it is possible that some decades ago, there was a significant difference in health in terms of citizenship status -perhaps due to some health-related legislation- that persists for people who are older today. To answer this type of questions we need to analyze the three different dimensions at the same time -for example, using an adequate mosaic plot-.</p>
-<p>We will also use georeferencing data of each person’s location to assess whether there are differences in health across states and counties in the United States. In particular, we will utilize the variables ‘GESTFIPS’ and ‘GTCO’ that indicate respectively the state and county of each observation. Finally, for all the previous analyses to be correct, we will weigh each observation with its respective weight indicated in the variable ‘A_FNLWGT’.</p>
+<p>We will also use georeferencing data of each person’s location to assess whether there are differences in health across states in the United States. In particular, we will utilize the variable ‘GESTFIPS’ that indicates the state of each observation. Finally, for all the previous analyses to be correct, we will weigh each observation with its respective weight indicated in the variable ‘A_FNLWGT’.</p>
 </section>
 <section id="initial-preprocessing" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="initial-preprocessing"><span class="header-section-number">2.3</span> Initial preprocessing</h2>
@@ -233,93 +233,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#remotes::install_github("jtr13/redav") </span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("data.table")</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cpsR)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cpsR)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DataExplorer)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'cpsR' was built under R version 4.3.2</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'forcats' was built under R version 4.3.2</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.3     ✔ readr     2.1.4
-✔ forcats   1.0.0     ✔ stringr   1.5.0
-✔ ggplot2   3.4.3     ✔ tibble    3.2.1
-✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-✔ purrr     1.0.2     
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(DataExplorer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'DataExplorer' was built under R version 4.3.2</code></pre>
-</div>
-<details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'data.table'
-
-The following objects are masked from 'package:lubridate':
-
-    hour, isoweek, mday, minute, month, quarter, second, wday, week,
-    yday, year
-
-The following objects are masked from 'package:dplyr':
-
-    between, first, last
-
-The following object is masked from 'package:purrr':
-
-    transpose</code></pre>
-</div>
 </div>
 <p>Then, we import the selected features from the 2023 CPS-ASEC dataset using the function ‘get_asec’ from the package ‘cpsR’:</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">get_asec</span>(<span class="at">year =</span> <span class="dv">2023</span>, <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"PERIDNUM"</span>, <span class="st">"A_FNLWGT"</span>, <span class="st">"GESTFIPS"</span>, <span class="st">"GTCO"</span>, <span class="st">"HEA"</span>, <span class="st">"A_AGE"</span>, <span class="st">"A_SEX"</span>, <span class="st">"PRCITSHP"</span>,<span class="st">"PRDTRACE"</span>, <span class="st">"PEMLR"</span>,<span class="st">"A_HGA"</span>,<span class="st">"PEARNVAL"</span>,<span class="st">"DIS_HP"</span>,<span class="st">"NOW_COV"</span>, <span class="st">"MOOP"</span>, <span class="st">"PTOTVAL"</span>), <span class="at">key=</span><span class="st">"033d6fdb469d970444d91cda781be61fa0d46099"</span>, <span class="at">tibble =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">get_asec</span>(<span class="at">year =</span> <span class="dv">2023</span>, <span class="at">vars =</span> <span class="fu">c</span>(<span class="st">"PERIDNUM"</span>, <span class="st">"A_FNLWGT"</span>, <span class="st">"GESTFIPS"</span>, <span class="st">"GTCO"</span>, <span class="st">"HEA"</span>, <span class="st">"A_AGE"</span>, <span class="st">"A_SEX"</span>, <span class="st">"PRCITSHP"</span>,<span class="st">"PRDTRACE"</span>, <span class="st">"PEMLR"</span>,<span class="st">"A_HGA"</span>,<span class="st">"PEARNVAL"</span>,<span class="st">"DIS_HP"</span>,<span class="st">"NOW_COV"</span>, <span class="st">"MOOP"</span>, <span class="st">"PTOTVAL"</span>), <span class="at">key=</span><span class="st">"033d6fdb469d970444d91cda781be61fa0d46099"</span>, <span class="at">tibble =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Getting CPS ASEC microdata for 2023</code></pre>
-</div>
 </div>
 <p>We rename each variable as follows:</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ID =</span> <span class="st">"peridnum"</span>,</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Wt =</span> <span class="st">"a_fnlwgt"</span>,</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">State =</span> <span class="st">"gestfips"</span>,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Co =</span> <span class="st">"gtco"</span>, <span class="co"># County</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Health =</span> <span class="st">"hea"</span>,</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Age =</span> <span class="st">"a_age"</span>,</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sex =</span> <span class="st">"a_sex"</span>,</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">Citz =</span> <span class="st">"prcitshp"</span>,</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">Race =</span> <span class="st">"prdtrace"</span>,</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">Empt =</span> <span class="st">"pemlr"</span>,</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">Edu =</span> <span class="st">"a_hga"</span>,</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">Earn =</span> <span class="st">"pearnval"</span>,</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">Pwd =</span> <span class="st">"dis_hp"</span>,</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ins =</span> <span class="st">"now_cov"</span>,</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">MExp =</span> <span class="st">"moop"</span>,</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">Inc =</span> <span class="st">"ptotval"</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ID =</span> <span class="st">"peridnum"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Wt =</span> <span class="st">"a_fnlwgt"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">State =</span> <span class="st">"gestfips"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">Co =</span> <span class="st">"gtco"</span>, <span class="co"># County</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">Health =</span> <span class="st">"hea"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">Age =</span> <span class="st">"a_age"</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sex =</span> <span class="st">"a_sex"</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">Citz =</span> <span class="st">"prcitshp"</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">Race =</span> <span class="st">"prdtrace"</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">Empt =</span> <span class="st">"pemlr"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">Edu =</span> <span class="st">"a_hga"</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">Earn =</span> <span class="st">"pearnval"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">Pwd =</span> <span class="st">"dis_hp"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">Ins =</span> <span class="st">"now_cov"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">MExp =</span> <span class="st">"moop"</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">Inc =</span> <span class="st">"ptotval"</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -330,14 +280,8 @@ The following object is masked from 'package:purrr':
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>redav<span class="sc">::</span><span class="fu">plot_missing</span>(df, <span class="at">percent=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>redav<span class="sc">::</span><span class="fu">plot_missing</span>(df, <span class="at">percent=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Scale for y is already present.
-Adding another scale for y, which will replace the existing scale.
-Scale for y is already present.
-Adding another scale for y, which will replace the existing scale.</code></pre>
-</div>
 <div class="cell-output-display">
 <p><img src="data_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -347,44 +291,39 @@ Adding another scale for y, which will replace the existing scale.</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>plot_missing_2 <span class="ot">&lt;-</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span> (data, <span class="at">group =</span> <span class="fu">list</span>(<span class="at">Good =</span> <span class="fl">0.05</span>, <span class="at">Okay =</span> <span class="fl">0.4</span>, <span class="at">Poor =</span> <span class="fl">0.8</span>, </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Scarce =</span>  <span class="dv">1</span>), <span class="at">geom_label_args =</span> <span class="fu">list</span>(), <span class="at">title =</span> <span class="cn">NULL</span>, <span class="at">ggtheme =</span> <span class="fu">theme_gray</span>(), </span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="at">theme_config =</span> <span class="fu">list</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="st">"bottom"</span>))) </span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  pct_missing <span class="ot">&lt;-</span> Band <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  missing_value <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="fu">profile_missing</span>(data))</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  group <span class="ot">&lt;-</span> group[<span class="fu">sort.list</span>(<span class="fu">unlist</span>(group))]</span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(<span class="fu">lapply</span>(<span class="fu">seq_along</span>(group), <span class="cf">function</span>(i) {</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (i <span class="sc">==</span> <span class="dv">1</span>) {</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>      missing_value[pct_missing <span class="sc">&lt;=</span> group[[i]], <span class="st">`</span><span class="at">:=</span><span class="st">`</span>(Band,</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>         <span class="fu">names</span>(group)[i])]</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  missing_value[pct_missing <span class="sc">&gt;</span> group[[i <span class="sc">-</span> <span class="dv">1</span>]] <span class="sc">&amp;</span> pct_missing <span class="sc">&lt;=</span> </span>
-<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>     group[[i]], <span class="st">`</span><span class="at">:=</span><span class="st">`</span>(Band, <span class="fu">names</span>(group)[i])]</span>
-<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>}))</span>
-<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>  output <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(missing_value, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="st">"feature"</span>, </span>
-<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"num_missing"</span>, <span class="at">fill =</span> <span class="st">"Band"</span>)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span> </span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_fill_manual</span>(<span class="st">"Band"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Good"</span><span class="ot">=</span><span class="st">"green2"</span>,<span class="st">"Okay"</span><span class="ot">=</span><span class="st">"gold"</span>,<span class="st">"Poor"</span><span class="ot">=</span><span class="st">"darkorange"</span>,<span class="st">"Scarce"</span><span class="ot">=</span><span class="st">"firebrick2"</span>)) <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Features"</span>) <span class="sc">+</span> </span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>   <span class="fu">ylab</span>(<span class="st">"Missing Rows"</span>)</span>
-<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>  geom_label_args_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste0</span>(<span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> </span>
-<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    pct_missing, <span class="dv">2</span>), <span class="st">"%"</span>)))</span>
-<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  output <span class="ot">&lt;-</span> output <span class="sc">+</span> <span class="fu">do.call</span>(<span class="st">"geom_label"</span>, <span class="fu">c</span>(geom_label_args_list, </span>
-<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>     geom_label_args)) <span class="sc">+</span> <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>), <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">10</span>))</span>
-<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">class</span>(output) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"single"</span>, <span class="fu">class</span>(output))</span>
-<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotDataExplorer</span>(<span class="at">plot_obj =</span> output, <span class="at">title =</span> title, <span class="at">ggtheme =</span> ggtheme, </span>
-<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>   <span class="at">theme_config =</span> theme_config)</span>
-<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_missing_2</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plot_missing_2 <span class="ot">&lt;-</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">function</span> (data, <span class="at">group =</span> <span class="fu">list</span>(<span class="at">Good =</span> <span class="fl">0.05</span>, <span class="at">Okay =</span> <span class="fl">0.4</span>, <span class="at">Poor =</span> <span class="fl">0.8</span>, </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Scarce =</span>  <span class="dv">1</span>), <span class="at">geom_label_args =</span> <span class="fu">list</span>(), <span class="at">title =</span> <span class="cn">NULL</span>, <span class="at">ggtheme =</span> <span class="fu">theme_gray</span>(), </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="at">theme_config =</span> <span class="fu">list</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="st">"bottom"</span>))) </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  pct_missing <span class="ot">&lt;-</span> Band <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  missing_value <span class="ot">&lt;-</span> <span class="fu">data.table</span>(<span class="fu">profile_missing</span>(data))</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  group <span class="ot">&lt;-</span> group[<span class="fu">sort.list</span>(<span class="fu">unlist</span>(group))]</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">invisible</span>(<span class="fu">lapply</span>(<span class="fu">seq_along</span>(group), <span class="cf">function</span>(i) {</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (i <span class="sc">==</span> <span class="dv">1</span>) {</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>      missing_value[pct_missing <span class="sc">&lt;=</span> group[[i]], <span class="st">`</span><span class="at">:=</span><span class="st">`</span>(Band,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>         <span class="fu">names</span>(group)[i])]</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  missing_value[pct_missing <span class="sc">&gt;</span> group[[i <span class="sc">-</span> <span class="dv">1</span>]] <span class="sc">&amp;</span> pct_missing <span class="sc">&lt;=</span> </span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>     group[[i]], <span class="st">`</span><span class="at">:=</span><span class="st">`</span>(Band, <span class="fu">names</span>(group)[i])]</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>}))</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  output <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(missing_value, <span class="fu">aes_string</span>(<span class="at">x =</span> <span class="st">"feature"</span>, </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"num_missing"</span>, <span class="at">fill =</span> <span class="st">"Band"</span>)) <span class="sc">+</span> <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">"identity"</span>) <span class="sc">+</span> </span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>   <span class="fu">scale_fill_manual</span>(<span class="st">"Band"</span>, <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"Good"</span><span class="ot">=</span><span class="st">"green2"</span>,<span class="st">"Okay"</span><span class="ot">=</span><span class="st">"gold"</span>,<span class="st">"Poor"</span><span class="ot">=</span><span class="st">"darkorange"</span>,<span class="st">"Scarce"</span><span class="ot">=</span><span class="st">"firebrick2"</span>)) <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">"Features"</span>) <span class="sc">+</span> </span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>   <span class="fu">ylab</span>(<span class="st">"Missing Rows"</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  geom_label_args_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">paste0</span>(<span class="fu">round</span>(<span class="dv">100</span> <span class="sc">*</span> </span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    pct_missing, <span class="dv">2</span>), <span class="st">"%"</span>)))</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  output <span class="ot">&lt;-</span> output <span class="sc">+</span> <span class="fu">do.call</span>(<span class="st">"geom_label"</span>, <span class="fu">c</span>(geom_label_args_list, </span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>     geom_label_args)) <span class="sc">+</span> <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>), <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">100</span>, <span class="at">by =</span> <span class="dv">10</span>))</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">class</span>(output) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"single"</span>, <span class="fu">class</span>(output))</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plotDataExplorer</span>(<span class="at">plot_obj =</span> output, <span class="at">title =</span> title, <span class="at">ggtheme =</span> ggtheme, </span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>   <span class="at">theme_config =</span> theme_config)</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="fu">plot_missing_2</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: `aes_string()` was deprecated in ggplot2 3.0.0.
-ℹ Please use tidy evaluation idioms with `aes()`.
-ℹ See also `vignette("ggplot2-in-packages")` for more information.</code></pre>
-</div>
 <div class="cell-output-display">
 <p><img src="data_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
@@ -394,8 +333,8 @@ Adding another scale for y, which will replace the existing scale.</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(df)) <span class="sc">%&gt;%</span> </span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sort</span> (<span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(df)) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sort</span> (<span class="at">decreasing =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>    ID     Wt  State     Co Health    Age    Sex   Citz   Race   Empt    Edu 
@@ -408,7 +347,7 @@ Adding another scale for y, which will replace the existing scale.</code></pre>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df[df<span class="sc">$</span>Age <span class="sc">&lt;</span> <span class="dv">15</span>, ]) <span class="sc">==</span> <span class="fu">nrow</span>(df[df<span class="sc">$</span>Pwd <span class="sc">==</span> <span class="dv">0</span>, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(df[df<span class="sc">$</span>Age <span class="sc">&lt;</span> <span class="dv">15</span>, ]) <span class="sc">==</span> <span class="fu">nrow</span>(df[df<span class="sc">$</span>Pwd <span class="sc">==</span> <span class="dv">0</span>, ])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] TRUE</code></pre>
