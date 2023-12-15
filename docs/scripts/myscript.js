@@ -6,30 +6,40 @@ let rowConverter = function(d) {
   }
 }
 
-function adjustRow(svg, item) {
+function adjustRow(svg, item, toggle) {
+  d3.select('#range').attr('value', item)
+
   svg.selectAll('#axis').remove()
   svg.selectAll('line').remove()
   svg.selectAll('rect').remove()
   svg.selectAll('circle').remove()
+
   let arr = ["Poor", "Fair", "Good", "Very good", "Excellent"]
+  let x = d3.scaleLinear().domain([0, item]).range([0, 420])
 
-  let x = d3.scaleLinear()
-  .domain([0, item])
-  .range([0, 420])
-
-  let dummy = d3.scaleLinear()
-  .domain([0, 2])
-  .range([0, 420])
+  svg.append('g')
+  .attr("transform", "translate(0," + 340 + ")")
+  .attr('id', 'axis')
+  .call(d3.axisBottom(x))
 
   let y = d3.scaleBand()
   .domain(arr)
   .range([340, 0])
 
+  svg.append('g')
+  .attr('id', 'axis')
+  .text('Health')
+  .call(d3.axisLeft(y))
+
   d3.csv('https://raw.githubusercontent.com/dtung8068/cps-asec-2023/main/df.csv', rowConverter).then(function(data) {
     let groups = d3.groups(data, d => d.Health)
     for(let i = 0; i < groups.length; i++) {
-
       let values = groups[i][1].map(d => d.Earn / 1000000)
+
+      if(toggle == true) {
+        values = values.filter(d => d < 0.2)
+      }
+
       let q1 = d3.quantile(values, 0.25)
       let median = d3.quantile(values, 0.5)
       let q3 = d3.quantile(values, 0.75)
@@ -68,27 +78,16 @@ function adjustRow(svg, item) {
 
       let outliers = values.filter(d => d > max)
 
-      svg.selectAll(groups[i][0]).data(outliers).enter()
+      svg.selectAll(groups[i][0] + '_outlier').data(outliers).enter()
       .append('circle')
       .attr('r', 2)
       .attr('cx', function(d) { return x(d)})
       .attr('cy', y(groups[i][0]))
-      .attr('id', groups[i][0])
+      .attr('id', groups[i][0] + '_outlier')
       .attr('transform', 'translate(0, 34)')
     }
   });
-  svg.append('g')
-  .attr("transform", "translate(0," + 340 + ")")
-  .attr('id', 'axis')
-  .call(d3.axisBottom(x))
-
-  svg.append('g')
-  .attr('id', 'axis')
-  .text('Health')
-  .call(d3.axisLeft(y))
-
 }
-
 
 let svg = d3.select('#plot').append('svg')
 .attr('width', 500)
@@ -124,7 +123,16 @@ let slider = d3.select('#plot').append('input')
 .attr('value', 2)
 .attr('id', 'range')
 .attr('step', 0.1)
-.attr('onchange', "adjustRow(svg, this.value)")
+.attr('onchange', "adjustRow(svg, this.value, d3.select(\'#check\').attr(\'checked\'))")
+
+let checkboxes = d3.select('#plot').append('div')
+
+checkboxes.append('input')
+.attr('type', 'checkbox')
+.attr('id', 'check')
+.attr('onclick', 'adjustRow(svg, d3.select(\'#range\').attr(\'value\'), this.checked)')
+
+checkboxes.append('text').text('Remove Outliers')
 
 adjustRow(svg, 2)
 
