@@ -10,6 +10,7 @@ function adjustRow(svg, item) {
   svg.selectAll('#axis').remove()
   svg.selectAll('line').remove()
   svg.selectAll('rect').remove()
+  svg.selectAll('circle').remove()
   let arr = ["Poor", "Fair", "Good", "Very good", "Excellent"]
 
   let x = d3.scaleLinear()
@@ -24,7 +25,7 @@ function adjustRow(svg, item) {
   .domain(arr)
   .range([340, 0])
 
-  d3.csv('df.csv', rowConverter).then(function(data) {
+  d3.csv('https://raw.githubusercontent.com/dtung8068/cps-asec-2023/main/docs/df.csv', rowConverter).then(function(data) {
     let groups = d3.groups(data, d => d.Health)
     for(let i = 0; i < groups.length; i++) {
 
@@ -65,6 +66,15 @@ function adjustRow(svg, item) {
       .attr('y2', y(groups[i][0]) + 25)
       .attr('transform', 'translate(0, 20)')
 
+      let outliers = values.filter(d => d > max)
+
+      svg.selectAll(groups[i][0]).data(outliers).enter()
+      .append('circle')
+      .attr('r', 2)
+      .attr('cx', function(d) { return x(d)})
+      .attr('cy', y(groups[i][0]))
+      .attr('id', groups[i][0])
+      .attr('transform', 'translate(0, 34)')
     }
   });
   svg.append('g')
