@@ -341,6 +341,7 @@ set.seed(3203)
 samp_idx <- sample(seq_len(nrow(df_6)), size=150, prob=df_6$Wt)
 new_data <- df_6[samp_idx, ]
 
+library(parcoords)
 new_data %>% 
   select(-Wt) %>% 
   parcoords(rownames = F,
